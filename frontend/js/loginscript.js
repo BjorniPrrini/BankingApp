@@ -27,7 +27,7 @@ function showForgotPassword(e) {
 
 let selectedRole = "client";
 function selectRole(role, btn) {
-    let selectedRole = role;
+    selectedRole = role;
 
     document.querySelectorAll(".role-btn").forEach(function(b) {
         b.classList.remove("active");
