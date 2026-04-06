@@ -3,113 +3,97 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Bank – Login</title>
 
-    <link rel="stylesheet" href="css/loginpagestyles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="css/loginpagestyles.css"/>
 </head>
+
 <body>
-
-<header class="header">
-    <div class="logo">
-        <span class="logo-icon">B</span>
-        <div>
-            <span class="logo-name">Bank</span>
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">B</span>
+            <div>
+                <span class="logo-name">Bank</span>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<main class="main">
+    <main class="main">
+        <section class="login-card">
+            <div class="alert" id="alert-box"></div>
+        
+            <h2 class="form-title">Sign In</h2>
+        
+            <p class="form-subtitle">Choose your role and enter your credentials</p>
 
-    <section class="login-card">
-
-        <div class="alert" id="alert-box"></div>
-
-
-        <h2 class="form-title">Sign In</h2>
-        <p class="form-subtitle">Choose your role and enter your credentials</p>
-
-
-        <div class="role-selector">
-            <button class="role-btn active" data-role="client" onclick="selectRole('client', this)">
-                <span>👤</span> Client
-            </button>
-            <button class="role-btn" data-role="banker" onclick="selectRole('banker', this)">
-                <span>🏦</span> Banker
-            </button>
-            <button class="role-btn" data-role="admin" onclick="selectRole('admin', this)">
-                <span>⚙️</span> Admin
-            </button>
-        </div>
-
-        <form id="login-form" onsubmit="handleLogin(event)">
-            <div class="field-group">
-                <label for="email">Email Address</label>
-                <input
-                        type="email"
-                        id="email"
-                        placeholder="example@email.com"
-                        required
-                />
+            <div class="role-selector">
+                <button class="role-btn active" data-role="client">
+                    <span>👤</span> Client
+                </button>
+                <button class="role-btn" data-role="banker">
+                    <span>🏦</span> Banker
+                </button>
+                <button class="role-btn" data-role="admin">
+                    <span>⚙️</span> Admin
+                </button>
             </div>
 
-            <div class="field-group" id="empid-group" style="display: none;">
-                <label for="empid">Employee ID</label>
-                <input
-                        type="text"
-                        id="empid"
-                        placeholder="e.g. B-10042"
-                />
-                <small>Required for Banker and Admin roles only</small>
-            </div>
-
-            <div class="field-group">
-                <label for="password">Password</label>
-                <div class="password-wrapper">
-                    <input
-                            type="password"
-                            id="password"
-                            placeholder="Enter your password"
-                            required
-                    />
-                    <button type="button" class="eye-btn" onclick="togglePassword()">👁</button>
+            <form id="login-form">
+                <div class="field-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="example@email.com" />
                 </div>
-            </div>
 
+                <div class="field-group" id="empid-group" style="display: none;">
+                    <label for="empid">Employee ID</label>
+                    <input type="text" id="empid" placeholder="123..."/>
+                    <small>Required for Banker and Admin roles only</small>
+                </div>
 
-            <div class="form-options">
-                <a href="#" class="forgot-link" onclick="showForgotPassword(event)">Forgot password?</a>
-            </div>
+                <div class="field-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" />
+                        <button type="button" class="eye-btn">👁</button>
+                    </div>
+                </div>
+            
+                <div class="form-options">
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
 
-            <button type="submit" class="login-btn" id="login-btn">
-                Sign In Securely →
-            </button>
+                <button type="submit" class="login-btn" id="login-btn">Sign In</button>
+            </form>
+        </section>
+    </main>
 
-        </form>
-    </section>
+    <div class="modal-overlay" id="forgot-modal">
+        <div class="modal">
+            <button class="modal-close">✕</button>
+        
+            <h2>Reset Password</h2>
 
-</main>
+            <p class="modal-subtitle">We'll send a reset link to your email address</p>
 
-<div class="modal-overlay" id="forgot-modal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('forgot-modal')">✕</button>
-        <h2>Reset Password</h2>
-        <p class="modal-subtitle">We'll send a reset link to your email address</p>
-
-        <form onsubmit="handleForgot(event)">
-            <div class="field-group">
-                <label for="forgot-email">Registered Email</label>
-                <input type="email" id="forgot-email" placeholder="your@email.com" required />
-            </div>
-            <button type="submit" class="login-btn">Send Reset Link</button>
-        </form>
+            <form>
+                <div class="field-group">
+                    <label for="forgot-email">Registered Email</label>
+                    <input type="email" id="forgot-email" placeholder="your@email.com"/>
+                </div>
+            
+                <button type="submit" class="login-btn">Send Reset Link</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<footer class="footer">
-    <p>© 2026 Bank  · All rights reserved</p>
-</footer>
+    <footer class="footer">
+        <p>© 2026 Bank  · All rights reserved</p>
+    </footer>
 
-<script src="js/loginscript.js"></script>
+    <script src="js/loginscript.js"></script>
 
 </body>
 </html>
