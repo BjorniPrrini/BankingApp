@@ -46,10 +46,9 @@ function selectRole(role, btn) {
 function handleLogin(e) {
     e.preventDefault();
 
-    // Read values from the form
-    const email    = document.getElementById("email").value.trim().toLowerCase();
+    const email= document.getElementById("email").value.trim().toLowerCase();
     const password = document.getElementById("password").value;
-    const empid    = document.getElementById("empid").value.trim().toUpperCase();
+    const empid= document.getElementById("empid").value.trim().toUpperCase();
 
     if (!email || !password) {
         showAlert("Please fill in all required fields.", "danger");
