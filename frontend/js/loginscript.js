@@ -44,7 +44,7 @@ function selectRole(role, btn) {
 
 
 function handleLogin(e) {
-    e.preventDefault(); // prevent page from reloading
+    e.preventDefault();
 
     // Read values from the form
     const email    = document.getElementById("email").value.trim().toLowerCase();
