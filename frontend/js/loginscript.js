@@ -17,6 +17,6 @@ $(document).ready(() => {
 
         const activeRole = $(".role-btn.active").data("role");
 
-        window.location.href = "pages/" + activeRole + "Home.html";
+        window.location.href = "pages/" + activeRole + "/" + activeRole+ "Home.html";
     });
 });
