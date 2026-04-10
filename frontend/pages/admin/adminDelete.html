@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Employee</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/admin/adminHome.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo">
+        <div class="logo-icon">GS</div>
+        <span class="logo-name">GoldStone Bank</span>
+    </div>
+    <span class="admin-badge">Admin Panel</span>
+</header>
+<main class="main">
+    <div class="login-card">
+        <h2 class="form-title">Delete Employee</h2>
+        <p class="form-subtitle">Are you sure you want to delete this employee?</p>
+        <div class="field-group">
+            <label>ID</label>
+            <input type="text" id="empID" readonly />
+        </div>
+        <div class="field-group">
+            <label>Full Name</label>
+            <input type="text" id="empName" readonly />
+        </div>
+        <div class="field-group">
+            <label>Paycheck</label>
+            <input type="text" id="empPaycheck" readonly />
+        </div>
+        <div class="field-group">
+            <label>Email</label>
+            <input type="text" id="empEmail" readonly />
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="action-delete" id="confirmDelete">Delete</button>
+            <button class="back-btn" id="cancelDelete">Cancel</button>
+        </div>
+    </div>
+</main>
+<footer class="footer">
+</footer>
+<script src="/js/admin/adminDelete.js"></script>
+</body>
+</html>
