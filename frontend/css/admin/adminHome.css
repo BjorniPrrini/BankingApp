@@ -272,6 +272,7 @@ tbody td {
     font-weight: 600;
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
+    width: 50%;
 }
 
 .back-btn:hover {
@@ -359,9 +360,10 @@ tbody td {
     height: 40px;
     padding: 0 20px;
     background: transparent;
-    border: 1px solid var(--border);
+    background: rgb(255 196 0 / 0.12);
+    border: 1px solid rgb(255 174 0 / 0.35);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: rgb(255 165 0 / 0.68);
     font-family: var(--font-main);
     font-size: 13px;
     font-weight: 600;
@@ -377,4 +379,5 @@ tbody td {
     height: 40px;
     padding: 0 20px;
     font-size: 13px;
+    width: 50%;
 }

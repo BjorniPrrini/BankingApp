@@ -1,13 +1,12 @@
-$(document).ready(function () {
-
+$(document).ready(function (){
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get('id'));
-
     const employees = JSON.parse(localStorage.getItem('employeeList') || '[]');
     const emp = employees.find(e => e.ID === id);
 
-    if (!emp) {
+    if(!emp){
         window.location.href = '/frontend/pages/admin/adminHome.html';
+
         return;
     }
 
@@ -16,14 +15,15 @@ $(document).ready(function () {
     $('#empPaycheck').val('$' + emp.payCheck);
     $('#empEmail').val(emp.email);
 
-    $('#confirmDelete').on('click', function () {
+    $('#confirmDelete').on('click', function (){
         let updated = employees.filter(e => e.ID !== id);
+
         localStorage.setItem('employeeList', JSON.stringify(updated));
+
         window.location.href = '/frontend/pages/admin/adminHome.html';
     });
 
-    $('#cancelDelete').on('click', function () {
+    $('#cancelDelete').on('click', function (){
         window.location.href = '/frontend/pages/admin/adminHome.html';
     });
-
 });

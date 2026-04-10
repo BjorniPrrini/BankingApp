@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Bank – Add employee</title>
+    <title>Bank – Edit employee</title>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <link rel="stylesheet" href="/css/admin/adminAdd.css"/>
+    <link rel="stylesheet" href="/css/admin/adminEdit.css"/>
 </head>
 
 <body>
@@ -27,9 +27,9 @@
     <section class="login-card">
         <div class="alert" id="alert-box"></div>
 
-        <h2 class="form-title">Add employee</h2>
+        <h2 class="form-title">Edit employee</h2>
 
-        <p class="form-subtitle">Fill employee credentials</p>
+        <p class="form-subtitle">Change employee credentials</p>
 
         <form id="login-form">
             <div class="field-group">
@@ -48,8 +48,8 @@
             </div>
 
             <div class="field-group">
-                <label for="generatedID">Generated ID:</label>
-                <input type="text" id="generatedID" placeholder="Generated ID" readonly/>
+                <label for="ID">Generated ID:</label>
+                <input type="text" id="ID" placeholder="Generated ID" readonly/>
             </div>
 
             <div class="field-group">
@@ -62,14 +62,14 @@
                 <input type="text" id="generatedPassword" placeholder="Generated password" readonly/>
             </div>
 
-            <button type="submit" class="add-btn" id="addButton">Add</button>
+            <button type="button" class="editButton" id="editButton">Edit</button>
             <button type="button" class="goBack" id="goBack">Go Back</button>
         </form>
     </section>
 </main>
 <footer class="footer">GoldStone Bank 2026</footer>
 
-<script src="/js/admin/adminAdd.js"></script>
+<script src="/js/admin/adminEdit.js"></script>
 
 </body>
 </html>

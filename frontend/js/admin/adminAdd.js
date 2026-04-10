@@ -1,10 +1,10 @@
 $(document).ready(() => {
-    $('#addButton').on('click', function (e){
+    $('#addButton').on('click', function(e){
         e.preventDefault();
 
-        let name = $('#name').val();
-        let surname = $('#surname').val();
-        let payCheck = $('#paycheck').val();
+        let name = $('#name').val().trim();
+        let surname = $('#surname').val().trim();
+        let payCheck = $('#paycheck').val().trim();
 
         if(!name || !surname || !payCheck){
             $('#alert-box').removeClass('success info').addClass('show danger').text('Empty fields');
@@ -17,6 +17,21 @@ $(document).ready(() => {
         }
 
         let employeeList = JSON.parse(localStorage.getItem('employeeList') || '[]');
+
+        const existsName = name.trim().toLowerCase();
+        const existsSurname = surname.trim().toLowerCase();
+
+        const alreadyExists = employeeList.some(emp => emp.name.trim().toLowerCase() === existsName && emp.surname.trim().toLowerCase() === existsSurname);
+
+        if(alreadyExists){
+            $('#alert-box').removeClass('success info').addClass('show danger').text('This employee is already registered');
+
+            setTimeout(() => {
+                $('#alert-box').removeClass('show');
+            }, 3000);
+
+            return;
+        }
 
         let generatedID;
 
