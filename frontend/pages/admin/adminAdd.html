@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Bank – Add employee</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="/css/admin/adminAdd.css"/>
+</head>
+
+<body>
+<header class="header">
+    <div class="logo">
+        <span class="logo-icon">GS</span>
+        <div>
+            <span class="logo-name">GoldStone Bank</span>
+        </div>
+    </div>
+
+    <span class="admin-badge">Admin Panel</span>
+</header>
+
+<main class="main">
+    <section class="login-card">
+        <div class="alert" id="alert-box"></div>
+
+        <h2 class="form-title">Add employee</h2>
+
+        <p class="form-subtitle">Fill employee credentials</p>
+
+        <form id="login-form">
+            <div class="field-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Name" />
+            </div>
+
+            <div class="field-group">
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" placeholder="Surname" />
+            </div>
+
+            <div class="field-group">
+                <label for="paycheck">PayCheck:</label>
+                <input type="number" id="paycheck" placeholder="000,000$" />
+            </div>
+
+            <div class="field-group">
+                <label for="generatedID">Generated ID:</label>
+                <input type="text" id="generatedID" placeholder="Generated ID" readonly/>
+            </div>
+
+            <div class="field-group">
+                <label for="generatedEmail">Generated Email:</label>
+                <input type="email" id="generatedEmail" placeholder="namesurnameID@gmail.com" readonly/>
+            </div>
+
+            <div class="field-group">
+                <label for="generatedPassword">Generated Password:</label>
+                <input type="text" id="generatedPassword" placeholder="Generated password" readonly/>
+            </div>
+
+            <button type="submit" class="add-btn" id="addButton">Add</button>
+            <button type="button" class="goBack" id="goBack">Go Back</button>
+        </form>
+    </section>
+</main>
+<footer class="footer">GoldStone Bank 2026</footer>
+
+<script src="/js/admin/adminAdd.js"></script>
+
+</body>
+</html>
