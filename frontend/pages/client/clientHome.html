@@ -1,10 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Page — GoldStone Bank</title>
+    <link rel="stylesheet" href="../../css/client/clientHome.css" />
 </head>
 <body>
-    client home
+
+<header class="header">
+    <div class="logo">
+        <div class="logo-icon">GS</div>
+        <span class="logo-name">GoldStone Bank</span>
+    </div>
+    <span class="admin-badge">Client Portal</span>
+</header>
+
+<main class="main">
+
+    <div class="top-card">
+        <div class="client-info">
+            <div class="avatar" id="clientAvatar"></div>
+            <div>
+                <div class="client-name" id="clientName"></div>
+                <div class="client-id">Client ID: <span id="clientId"></span></div>
+            </div>
+        </div>
+        <div class="balance-block">
+            <div class="balance-label">Available Balance</div>
+            <div class="balance-amount" id="clientBalance">ALL 0.00</div>
+            <div class="balance-sub" id="balanceDate"></div>
+        </div>
+    </div>
+
+    <div class="transactions-section">
+        <div class="section-header">
+            <div>
+                <div class="section-title">Transaction History</div>
+                <div class="section-sub">All incoming and outgoing transfers</div>
+            </div>
+            <span class="tx-count" id="txCount">0 transactions</span>
+        </div>
+
+        <div class="table-card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Tx ID</th>
+                    <th>Type</th>
+                    <th>Counterparty ID</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th class="col-right">Amount (ALL)</th>
+                </tr>
+                </thead>
+                <tbody id="txTableBody">
+                <tr class="empty-row">
+                    <td colspan="6">No transactions yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn-transfer" onclick="window.location.href='ClientTransferMoney.html'">Transfer Money</button>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <p>BankSys &copy; 2026 — Secure Client Portal</p>
+</footer>
+
 </body>
 </html>
