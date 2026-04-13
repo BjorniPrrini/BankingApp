@@ -13,7 +13,10 @@
         <div class="logo-icon">GS</div>
         <span class="logo-name">GoldStone Bank</span>
     </div>
-    <span class="admin-badge">Client Portal</span>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <span class="admin-badge">Client Portal</span>
+        <button class="logout-btn">Logout</button>
+    </div>
 </header>
 
 <main class="main">
@@ -64,7 +67,7 @@
     </div>
 
     <div class="btn-row">
-        <button class="btn-transfer" onclick="window.location.href='ClientTransferMoney.html'">Transfer Money</button>
+        <button class="btn-transfer">Transfer Money</button>
     </div>
 
 </main>
@@ -73,5 +76,7 @@
     <p>GoldStone Bank 2026</p>
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../../js/client/clientHome.js"></script>
 </body>
 </html>
