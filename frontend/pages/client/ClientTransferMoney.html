@@ -13,10 +13,14 @@
         <div class="logo-icon">GS</div>
         <span class="logo-name">GoldStone Bank</span>
     </div>
-    <span class="admin-badge">Client Portal</span>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <span class="admin-badge">Client Portal</span>
+    </div>
 </header>
 
 <main class="main">
+
+    <div id="alert-box"></div>
 
     <div class="transfer-card">
         <div class="transfer-card-header">
@@ -28,7 +32,7 @@
 
             <div class="field-group">
                 <label>Recipient ID</label>
-                <input type="text" id="recipientIdField" placeholder="" />
+                <input type="text" id="recipientIdField" placeholder="Enter client ID" />
             </div>
 
             <div class="field-group">
@@ -42,7 +46,7 @@
     </div>
 
     <div class="btn-row">
-        <button class="btn-home" onclick="window.location.href='client.html'">Homepage</button>
+        <button class="btn-home">Homepage</button>
     </div>
 
 </main>
@@ -51,5 +55,7 @@
     <p>GoldStone Bank 2026</p>
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../../js/client/clientTransfer.js"></script>
 </body>
 </html>
