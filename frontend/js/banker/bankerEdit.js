@@ -11,7 +11,7 @@ $(document).ready(() => {
     $('#generatedEmail').val(client.email);
     $('#generatedPassword').val(client.password);
 
-    $('#editButton').on('click', function (e) {
+    $('#editButton').on('click', function (e){
         e.preventDefault();
 
         let name = $('#name').val().trim();
@@ -30,6 +30,7 @@ $(document).ready(() => {
             $('#alert-box').removeClass('success info').addClass('show info').text('Nothing changed');
 
             setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+
             return;
         }
 
