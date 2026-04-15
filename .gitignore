@@ -15,6 +15,26 @@ bin/
 obj/
 .env
 *.log
+/httpRequests/
+
+# Secrets
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+# But keep the example file (create one with fake values)
+!appsettings.Example.json
+
+# Node
+node_modules/
+dist/
+.npm/
+
+# OS
 .DS_Store
 Thumbs.db
-/httpRequests/
+
+# Misc
+*.user
+*.suo
+.vscode/
