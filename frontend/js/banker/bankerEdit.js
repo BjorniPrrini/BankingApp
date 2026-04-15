@@ -52,7 +52,7 @@ $(document).ready(() => {
         $('#generatedEmail').val(generatedEmail);
         $('#generatedPassword').val(generatedPassword);
 
-        const index = employees.findIndex(cli => cli.ID === id);
+        const index = clients.findIndex(cli => cli.ID === id);
 
         clients[index] = {
             name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
