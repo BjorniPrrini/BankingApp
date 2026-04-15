@@ -18,3 +18,7 @@ obj/
 .DS_Store
 Thumbs.db
 /httpRequests/
+
+appsettings.json
+
+*.user
