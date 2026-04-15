@@ -1,9 +1,9 @@
-$(document).ready(function () {
-
+$(document).ready(function (){
     const client = JSON.parse(localStorage.getItem("loggedInClient") || "null");
 
-    if (!client) {
+    if(!client){
         window.location.href = "../../login.html";
+
         return;
     }
 
@@ -16,26 +16,25 @@ $(document).ready(function () {
 
     renderTransactions();
 
-    $(".btn-transfer").on("click", function () {
+    $(".btn-transfer").on("click", function (){
         window.location.href = "ClientTransferMoney.html";
     });
 
-    $(".logout-btn").on("click", function () {
+    $(".logout-btn").on("click", function (){
         localStorage.removeItem("loggedInClient");
+
         window.location.href = "../../login.html";
     });
 
-    function refreshBalance() {
-        const clientList  = JSON.parse(localStorage.getItem("clientList") || "[]");
-        const fresh       = clientList.find(c => c.ID === client.ID);
-        const balance     = fresh ? parseFloat(fresh.balance) : parseFloat(client.balance);
+    function refreshBalance(){
+        const clientList = JSON.parse(localStorage.getItem("clientList") || "[]");
+        const fresh = clientList.find(c => c.ID === client.ID);
+        const balance = fresh ? parseFloat(fresh.balance) : parseFloat(client.balance);
 
-        $("#clientBalance").text("ALL " + balance.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }));
+        $("#clientBalance").text("ALL " + balance.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}));
 
         const now = new Date();
+
         $("#balanceDate").text(
             "as of " +
             now.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) +
@@ -43,27 +42,30 @@ $(document).ready(function () {
             now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
         );
 
-        if (fresh) localStorage.setItem("loggedInClient", JSON.stringify(fresh));
+        if(fresh){
+            localStorage.setItem("loggedInClient", JSON.stringify(fresh));
+        }
     }
 
-    function renderTransactions() {
-        const allTx  = JSON.parse(localStorage.getItem("transactionList") || "[]");
-        const myTx   = allTx.filter(tx => tx.senderId === client.ID || tx.recipientId === client.ID);
+    function renderTransactions(){
+        const allTx = JSON.parse(localStorage.getItem("transactionList") || "[]");
+        const myTx = allTx.filter(tx => tx.senderId === client.ID || tx.recipientId === client.ID);
 
         const tbody  = $("#txTableBody");
+
         tbody.empty();
 
-        if (myTx.length === 0) {
-            tbody.append(
-                '<tr class="empty-row"><td colspan="6">No transactions yet.</td></tr>'
-            );
+        if(myTx.length === 0){
+            tbody.append('<tr class="empty-row"><td colspan="6">No transactions yet.</td></tr>');
+
             $("#txCount").text("0 transactions");
+
             return;
         }
 
         myTx.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        $.each(myTx, function (_, tx) {
+        $.each(myTx, function (_, tx){
             const isSender   = tx.senderId === client.ID;
             const typeLabel  = isSender ? "Send" : "Receive";
             const typeClass  = isSender ? "tx-type tx-send" : "tx-type tx-recv";
@@ -71,6 +73,7 @@ $(document).ready(function () {
             const counterparty = isSender ? tx.recipientId : tx.senderId;
             const amountClass  = isSender ? "amount-out" : "amount-in";
             const amountSign   = isSender ? "−" : "+";
+
             const amount = parseFloat(tx.amount).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
@@ -92,12 +95,9 @@ $(document).ready(function () {
         $("#txCount").text(myTx.length + " transaction" + (myTx.length !== 1 ? "s" : ""));
     }
 
-    function formatDate(isoString) {
+    function formatDate(isoString){
         const d = new Date(isoString);
-        return d.toLocaleDateString("en-US", {
-            year:  "numeric",
-            month: "short",
-            day:   "numeric"
-        });
+
+        return d.toLocaleDateString("en-US", {year:  "numeric", month: "short", day:   "numeric"});
     }
 });

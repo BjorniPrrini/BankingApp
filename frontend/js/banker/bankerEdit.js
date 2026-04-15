@@ -8,7 +8,7 @@ $(document).ready(() => {
     $('#surname').val(client.surname);
     $('#balance').val(client.balance);
     $('#ID').val(client.ID);
-    $('#generatedEmail').val(client.email);
+    $('#email').val(client.email);
     $('#generatedPassword').val(client.password);
 
     $('#editButton').on('click', function (e){
@@ -17,6 +17,7 @@ $(document).ready(() => {
         let name = $('#name').val().trim();
         let surname = $('#surname').val().trim();
         let balance = $('#balance').val().trim();
+        let email = $('#email').val().trim();
 
         if(!name || !surname || !balance){
             $('#alert-box').removeClass('success info').addClass('show danger').text('Empty fields');
@@ -26,7 +27,7 @@ $(document).ready(() => {
             return;
         }
 
-        if(name === client.name && surname === client.surname && balance === client.balance){
+        if(name === client.name && surname === client.surname && balance === client.balance && email === client.email){
             $('#alert-box').removeClass('success info').addClass('show info').text('Nothing changed');
 
             setTimeout(() => $('#alert-box').removeClass('show'), 3000);
@@ -47,10 +48,9 @@ $(document).ready(() => {
             return;
         }
 
-        let generatedEmail = name.toLowerCase() + surname.toLowerCase() + id + '@gmail.com';
         let generatedPassword = name.toLowerCase() + surname.toLowerCase() + id;
 
-        $('#generatedEmail').val(generatedEmail);
+        $('#email').val(email);
         $('#generatedPassword').val(generatedPassword);
 
         const index = clients.findIndex(cli => cli.ID === id);
@@ -60,7 +60,7 @@ $(document).ready(() => {
             surname: surname.charAt(0).toUpperCase() + surname.slice(1).toLowerCase(),
             balance: balance,
             ID: id,
-            email: generatedEmail,
+            email: email,
             password: generatedPassword
         };
 

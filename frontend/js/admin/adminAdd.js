@@ -39,7 +39,7 @@ $(document).ready(() => {
             generatedID = Math.floor(100000 + Math.random() * 900000);
         }while(employeeList.some(emp => emp.ID === generatedID));
 
-        let generatedEmail = name.toLowerCase() + surname.toLowerCase() + generatedID + '@gmail.com';
+        let generatedEmail = name.toLowerCase() + surname.toLowerCase() + generatedID + '@goldstone.com';
 
         let generatedPassword = name.toLowerCase() + surname.toLowerCase() + generatedID;
 

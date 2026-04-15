@@ -5,9 +5,10 @@ $(document).ready(() => {
         let name = $('#name').val().trim();
         let surname = $('#surname').val().trim();
         let balance = $('#balance').val().trim();
+        let email = $('#email').val().trim();
 
 
-        if(!name || !surname || !balance){
+        if(!name || !surname || !balance || !email){
             $('#alert-box').removeClass('success info').addClass('show danger').text('Empty fields');
 
             setTimeout(() => {
@@ -40,8 +41,6 @@ $(document).ready(() => {
             generatedID = Math.floor(10000 + Math.random() * 900000);
         }while(clientList.some(cli => cli.ID === generatedID));
 
-        let generatedEmail = name.toLowerCase() + surname.toLowerCase() + generatedID + '@gmail.com';
-
         let generatedPassword = name.toLowerCase() + surname.toLowerCase() + generatedID;
 
         let client = {
@@ -49,7 +48,7 @@ $(document).ready(() => {
             surname: surname.charAt(0).toUpperCase() + surname.slice(1).toLowerCase(),
             balance: balance,
             ID: generatedID,
-            email: generatedEmail,
+            email: email,
             password: generatedPassword
         }
 
@@ -57,7 +56,7 @@ $(document).ready(() => {
         localStorage.setItem('clientList', JSON.stringify(clientList));
 
         $('#generatedID').val(generatedID);
-        $('#generatedEmail').val(generatedEmail);
+        $('#email').val(email);
         $('#generatedPassword').val(generatedPassword);
 
         $('#alert-box').removeClass('danger info').addClass('show success').text('Client added successfully');
