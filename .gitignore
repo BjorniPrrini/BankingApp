@@ -19,7 +19,6 @@ obj/
 Thumbs.db
 /httpRequests/
 
-appsettings.json
 appsettings.Development.json
 
 *.user
