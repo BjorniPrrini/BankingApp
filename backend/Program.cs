@@ -1,14 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using DotNetEnv;
+using backend.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
 
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
@@ -28,7 +37,8 @@ if(app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.MapControllers();
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
