@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banker Panel</title>
+    <title>GoldStone Bank – Inbox</title>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="../../components/js/notifications.js"></script>
+    <script src="../../components/js/inbox.js"></script>
 
-    <link rel="stylesheet" href="/css/banker/bankerHome.css">
     <link rel="stylesheet" href="../../components/css/inbox.css">
     <link rel="stylesheet" href="../../components/css/notifications.css">
 </head>
@@ -46,35 +46,30 @@
 <main class="main">
     <div class="section-header">
         <div>
-            <div class="section-title">Client</div>
+            <div class="section-title">Inbox</div>
+            <div class="section-subtitle" id="inboxSubtitle"></div>
         </div>
-        <div class="section-actions">
-            <button class="add-btn">+ Add Client</button>
-            <button class="logout-btn">Logout</button>
+        <div class="inbox-actions">
+            <button class="inbox-read-all-btn" id="inboxReadAll">Mark all as read</button>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
     </div>
 
-    <div class="table-card">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Balance</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
+    <div class="inbox-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="unread">Unread</button>
+        <button class="filter-btn" data-filter="read">Read</button>
+    </div>
 
-            </tr>
-            </tbody>
-        </table>
+    <div class="inbox-table-card">
+        <div id="inboxList"></div>
     </div>
 </main>
+
 <footer class="footer">GoldStone Bank 2026</footer>
 
-<script src="/js/banker/bankerHome.js"></script>
+<script src="../../components/js/notifications.js"></script>
+<script src="../../components/js/inbox.js"></script>
 
 </body>
 </html>
