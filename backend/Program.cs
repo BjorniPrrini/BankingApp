@@ -1,42 +1,57 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
-using DotNetEnv;
+using backend.Enums;
 using backend.Hubs;
+using backend.Services.admin;
+using DotNetEnv;
+using Npgsql;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
 
-builder.Services.AddControllers();
+string connectionString =
+    $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+    $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+    $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+    $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}";
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+dataSourceBuilder.MapEnum<UserRole>("userrole");
+var dataSource = dataSourceBuilder.Build();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<AdminAddEmployeeService>();
 
-builder.Services.AddCors(options => {
-    options.AddDefaultPolicy(policy => {
-        policy.AllowAnyOrigin()
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:63343")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(
-        $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
-        $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-        $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-        $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
-        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}"
-    )
+builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(dataSource)
 );
 
 var app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
 app.UseCors();
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
