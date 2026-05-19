@@ -4,7 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Page — GoldStone Bank</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="../../components/js/notifications.js"></script>
+
     <link rel="stylesheet" href="../../css/client/clientHome.css" />
+    <link rel="stylesheet" href="../../components/css/inbox.css">
+    <link rel="stylesheet" href="../../components/css/notifications.css">
 </head>
 <body>
 
@@ -13,9 +20,26 @@
         <div class="logo-icon">GS</div>
         <span class="logo-name">GoldStone Bank</span>
     </div>
-    <div style="display:flex; align-items:center; gap:12px;">
-        <span class="admin-badge">Client Portal</span>
-        <button class="logout-btn">Logout</button>
+    <div class="header-right">
+        <div class="notif-wrapper">
+            <button class="bell-btn" id="bellBtn">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+                <span class="bell-badge hidden" id="bellBadge">0</span>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-header">
+                    <span>Notifications</span>
+                    <button class="read-all-btn" id="readAllBtn">Read all</button>
+                </div>
+                <div class="notif-list" id="notifList"></div>
+                <div class="notif-dropdown-footer">
+                    <button class="show-all-btn" id="showAllBtn">Show all</button>
+                </div>
+            </div>
+        </div>
+        <span class="admin-badge">Admin Panel</span>
     </div>
 </header>
 
@@ -76,7 +100,7 @@
     <p>GoldStone Bank 2026</p>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="../../js/client/clientHome.js"></script>
+
 </body>
 </html>

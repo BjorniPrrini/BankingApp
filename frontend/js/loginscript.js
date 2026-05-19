@@ -141,7 +141,7 @@ $(document).ready(() => {
         }
 
         if(role === "admin"){
-            const ADMIN_EMAIL = "admin@goldstonebank.com";
+            const ADMIN_EMAIL = "admin@goldstone.com";
             const ADMIN_PASSWORD = "admin123";
             const ADMIN_EMPID = "000000";
 

@@ -9,4 +9,16 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-/.idea/
+.idea/
+*.iml
+bin/
+obj/
+.env
+*.log
+.DS_Store
+Thumbs.db
+/httpRequests/
+
+appsettings.Development.json
+
+*.user
