@@ -1,49 +1,229 @@
 $(document).ready(() => {
-    $('#addButton').on('click', function(e){
+
+    $('#login-btn').on('click', function(e){
+
         e.preventDefault();
 
-        let name = $('#name').val().trim();
-        let surname = $('#surname').val().trim();
-        let payCheck = $('#paycheck').val().trim();
+        let selectedRole =
+            $('.role-btn.active').data('role');
 
-        if(!name || !surname || !payCheck){
-            $('#alert-box').removeClass('success info').addClass('show danger').text('Empty fields');
+        let email =
+            $('#email').val().trim();
+
+        let password =
+            $('#password').val();
+
+        let empid =
+            $('#empid').val().trim();
+
+        if(!email || !password){
+
+            $('#alert-box')
+                .removeClass('success info')
+                .addClass('show danger')
+                .text('Empty fields');
 
             setTimeout(() => {
-                $('#alert-box').removeClass('show');
+
+                $('#alert-box')
+                    .removeClass('show');
+
+            }, 3000);
+
+            return;
+        }
+
+        if(
+            (selectedRole === 'banker' ||
+                selectedRole === 'admin') &&
+            !empid
+        ){
+
+            $('#alert-box')
+                .removeClass('success info')
+                .addClass('show danger')
+                .text('Employee ID is required');
+
+            setTimeout(() => {
+
+                $('#alert-box')
+                    .removeClass('show');
+
             }, 3000);
 
             return;
         }
 
         $.ajax({
-           url: 'http://localhost:5104/api/admin/addEmployee/add',
-            method : 'POST',
+
+            url: 'http://localhost:5104/api/auth/login',
+
+            method: 'POST',
+
             contentType: 'application/json',
+
             data: JSON.stringify({
-                name: name,
-                surname: surname,
-                salary: payCheck
+                email: email,
+                password: password
             }),
+
             success: function(response){
-                $('#generatedID').val(response.employeeID);
-                $('#generatedEmail').val(response.email);
-                $('#generatedPassword').val(response.password);
-                $('#alert-box').removeClass('danger info').addClass('show success').text('Employee added successfully');
 
-                setTimeout(() => $('#alert-box').removeClass('show'), 5000);
+                let backendRole =
+                    response.role.toLowerCase();
+
+                if(backendRole !== selectedRole){
+
+                    $('#alert-box')
+                        .removeClass('success info')
+                        .addClass('show danger')
+                        .text('Incorrect role selected');
+
+                    setTimeout(() => {
+
+                        $('#alert-box')
+                            .removeClass('show');
+
+                    }, 3000);
+
+                    return;
+                }
+
+                localStorage.removeItem(
+                    'loggedInAdmin'
+                );
+
+                localStorage.removeItem(
+                    'loggedInBanker'
+                );
+
+                localStorage.removeItem(
+                    'loggedInClient'
+                );
+
+                if(backendRole === 'admin'){
+
+                    localStorage.setItem(
+                        'loggedInAdmin',
+                        JSON.stringify(response)
+                    );
+
+                    $('#alert-box')
+                        .removeClass('danger info')
+                        .addClass('show success')
+                        .text('Login successful');
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            '/frontend/pages/admin/adminHome.html';
+
+                    }, 800);
+
+                    return;
+                }
+
+                if(backendRole === 'banker'){
+
+                    localStorage.setItem(
+                        'loggedInBanker',
+                        JSON.stringify(response)
+                    );
+
+                    $('#alert-box')
+                        .removeClass('danger info')
+                        .addClass('show success')
+                        .text('Login successful');
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            '/frontend/pages/banker/bankerHome.html';
+
+                    }, 800);
+
+                    return;
+                }
+
+                if(backendRole === 'client'){
+
+                    localStorage.setItem(
+                        'loggedInClient',
+                        JSON.stringify(response)
+                    );
+
+                    $('#alert-box')
+                        .removeClass('danger info')
+                        .addClass('show success')
+                        .text('Login successful');
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            '/frontend/pages/client/clientHome.html';
+
+                    }, 800);
+
+                    return;
+                }
             },
+
             error: function(error){
-                let message = error.responseJSON?.message || 'Something went wrong';
 
-                $('#alert-box').removeClass('success info').addClass('show danger').text(message);
+                let message =
+                    error.responseJSON?.message
+                    || 'Invalid email or password';
 
-                setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+                $('#alert-box')
+                    .removeClass('success info')
+                    .addClass('show danger')
+                    .text(message);
+
+                setTimeout(() => {
+
+                    $('#alert-box')
+                        .removeClass('show');
+
+                }, 3000);
             }
         });
     });
 
-    $('#goBack').on('click', function(){
-        window.location.href = '/frontend/pages/admin/adminHome.html';
-    })
+    $('.eye-btn').on('click', function(){
+
+        let pwdInput = $('#password');
+
+        if(pwdInput.attr('type') === 'password'){
+
+            pwdInput.attr('type', 'text');
+
+            $(this).text('🙈');
+
+        }else{
+
+            pwdInput.attr('type', 'password');
+
+            $(this).text('👁');
+        }
+    });
+
+    $('.role-btn').on('click', function(){
+
+        $('.role-btn').removeClass('active');
+
+        $(this).addClass('active');
+
+        let role =
+            $(this).data('role');
+
+        if(role === 'banker' ||
+            role === 'admin'){
+
+            $('#empid-group').show();
+
+        }else{
+
+            $('#empid-group').hide();
+        }
+    });
 });

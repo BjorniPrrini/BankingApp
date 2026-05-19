@@ -81,94 +81,166 @@ $(document).ready(() => {
     });
 
     function handleLogin(){
-        const role = $(".role-btn.active").data("role");
-        const email = $("#email").val().trim();
-        const password = $("#password").val();
-        const empid = $("#empid").val().trim();
+
+        const selectedRole =
+            $(".role-btn.active").data("role");
+
+        const email =
+            $("#email").val().trim();
+
+        const password =
+            $("#password").val();
+
+        const empid =
+            $("#empid").val().trim();
 
         if(!email || !password){
-            showAlert("Please fill in all required fields.", "danger");
 
+            showAlert(
+                "Please fill in all required fields.",
+                "danger"
+            );
             return;
         }
 
-        if((role === "banker" || role === "admin") && !empid){
-            showAlert("Employee ID is required for Banker and Admin roles.", "danger");
-
+        if(
+            (selectedRole === "banker" ||
+                selectedRole === "admin") &&
+            !empid
+        ){
+            showAlert(
+                "Employee ID is required.",
+                "danger"
+            );
             return;
         }
 
-        if(role === "client"){
-            const clientList = JSON.parse(localStorage.getItem("clientList") || "[]");
+        $.ajax({
+            url: "http://localhost:5104/api/auth/login",
 
-            const client = clientList.find(c => c.email === email && c.password === password);
+            type: "POST",
 
-            if(!client){
-                showAlert("Invalid email or password.", "danger");
+            contentType: "application/json",
 
-                return;
+            data: JSON.stringify({
+                email: email,
+                password: password
+            }),
+
+            success: function(data){
+
+                console.log(data);
+
+                const backendRole =
+                    data.role.toLowerCase();
+
+                if(backendRole !== selectedRole){
+
+                    showAlert(
+                        "Incorrect role selected.",
+                        "danger"
+                    );
+                    return;
+                }
+
+                localStorage.removeItem(
+                    "loggedInAdmin"
+                );
+
+                localStorage.removeItem(
+                    "loggedInBanker"
+                );
+
+                localStorage.removeItem(
+                    "loggedInClient"
+                );
+
+                if(backendRole === "admin"){
+
+                    localStorage.setItem(
+                        "loggedInAdmin",
+                        JSON.stringify(data)
+                    );
+
+                    showAlert(
+                        "Login successful!",
+                        "success"
+                    );
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "pages/admin/adminHome.html";
+
+                    }, 800);
+
+                    return;
+                }
+
+                if(backendRole === "banker"){
+
+                    localStorage.setItem(
+                        "loggedInBanker",
+                        JSON.stringify(data)
+                    );
+
+                    showAlert(
+                        "Login successful!",
+                        "success"
+                    );
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "pages/banker/bankerHome.html";
+
+                    }, 800);
+
+                    return;
+                }
+
+                if(backendRole === "client"){
+
+                    localStorage.setItem(
+                        "loggedInClient",
+                        JSON.stringify(data)
+                    );
+
+                    showAlert(
+                        "Login successful!",
+                        "success"
+                    );
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "pages/client/clientHome.html";
+
+                    }, 800);
+
+                    return;
+                }
+            },
+
+            error: function(xhr){
+
+                let message =
+                    "Invalid email or password.";
+
+                if(
+                    xhr.responseJSON &&
+                    xhr.responseJSON.message
+                ){
+                    message =
+                        xhr.responseJSON.message;
+                }
+
+                showAlert(
+                    message,
+                    "danger"
+                );
             }
-
-            localStorage.setItem("loggedInClient", JSON.stringify(client));
-            showAlert("Login successful! Redirecting…", "success");
-
-            setTimeout(() => {
-                window.location.href = "pages/client/clientHome.html";
-            }, 800);
-
-            return;
-        }
-
-        if(role === "banker"){
-            const employeeList = JSON.parse(localStorage.getItem("employeeList") || "[]");
-
-            const banker = employeeList.find(emp => emp.email === email && emp.password === password && String(emp.ID) === empid);
-
-            if(!banker){
-                showAlert("Invalid email, password, or Employee ID.", "danger");
-
-                return;
-            }
-
-            localStorage.setItem("loggedInBanker", JSON.stringify(banker));
-            showAlert("Login successful! Redirecting…", "success");
-
-            setTimeout(() => {
-                window.location.href = "pages/banker/bankerHome.html";
-            }, 800);
-
-            return;
-        }
-
-        if(role === "admin"){
-            const ADMIN_EMAIL = "admin@goldstone.com";
-            const ADMIN_PASSWORD = "admin123";
-            const ADMIN_EMPID = "000000";
-
-            const employeeList = JSON.parse(localStorage.getItem("employeeList") || "[]");
-
-            const adminEmployee = employeeList.find(emp => emp.email === email && emp.password === password && String(emp.ID) === empid);
-
-            const isSuperAdmin = email === ADMIN_EMAIL && password === ADMIN_PASSWORD && empid === ADMIN_EMPID;
-
-            if(!isSuperAdmin && !adminEmployee){
-                showAlert("Invalid credentials for Admin role.", "danger");
-
-                return;
-            }
-
-            const adminData = isSuperAdmin ? { name: "Super", surname: "Admin", ID: 0, email: ADMIN_EMAIL } : adminEmployee;
-
-            localStorage.setItem("loggedInAdmin", JSON.stringify(adminData));
-
-            showAlert("Login successful! Redirecting…", "success");
-
-            setTimeout(() => {
-                window.location.href = "pages/admin/adminHome.html";
-            }, 800);
-
-            return;
-        }
+        });
     }
 
     function showAlert(message, type){
