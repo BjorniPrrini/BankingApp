@@ -34,17 +34,16 @@ public class AdminAddEmployeeService
         } while (await _database.Employees.AnyAsync(e => e.employee_id == employeeID));
 
         string generatedEmail = request.name.ToLower() + request.surname.ToLower() + employeeID + "@goldstone.com";
-        string generatedPassword = request.name.ToLower() + request.surname.ToLower() + employeeID;
+        string generatedPassword = BCrypt.Net.BCrypt.HashPassword(request.name.ToLower() + request.surname.ToLower() + employeeID);
 
         var user = new User
         {
             name = request.name,
             surname = request.surname,
             email = generatedEmail,
-            password = generatedPassword,
+            password = request.name.ToLower() + request.surname.ToLower() + employeeID,
             role = UserRole.banker
         };
-
         _database.Users.Add(user);
         await _database.SaveChangesAsync();
         
@@ -63,6 +62,14 @@ public class AdminAddEmployeeService
             isRead = false
         };
         _database.Notifications.Add(notification);
+        await _database.SaveChangesAsync();
+        
+        var autidLog = new AuditLog {
+            userID = user.id,
+            action = AuditAction.create_user,
+            description = $"Employee {request.name} {request.surname} was created by {UserSession.name} {UserSession.surname}.",
+        };
+        _database.AuditLogs.Add(autidLog);
         await _database.SaveChangesAsync();
         
         return (true, "Employee added successfully", new AddEmployeeResponse {

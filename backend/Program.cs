@@ -33,9 +33,10 @@ builder.Services.AddScoped<AdminAddEmployeeService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:63343")
+        policy
+            .WithOrigins("http://localhost:63342")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -52,7 +53,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors();
+app.UseRouting();
+app.UseCors("FrontendPolicy");
+app.UseAuthorization();
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
 

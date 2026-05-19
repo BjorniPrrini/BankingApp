@@ -58,7 +58,6 @@ public class AppDbContext : DbContext
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<AuditLog>().Property(a => a.userID).HasColumnName("userid");
-        modelBuilder.Entity<AuditLog>().Property(a => a.ipAddress).HasColumnName("ipaddress");
         modelBuilder.Entity<AuditLog>().Property(a => a.createdAt)
             .HasColumnName("createdat")
             .HasDefaultValueSql("CURRENT_TIMESTAMP")

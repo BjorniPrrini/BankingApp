@@ -16,7 +16,6 @@ $(document).ready(() => {
             return;
         }
 
-
         $.ajax({
            url: 'http://localhost:5104/api/admin/addEmployee/add',
             method : 'POST',
