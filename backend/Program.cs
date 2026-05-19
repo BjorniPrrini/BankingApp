@@ -6,6 +6,7 @@ using backend.Services.admin;
 using DotNetEnv;
 using Npgsql;
 using System.Text.Json.Serialization;
+using backend.Services.auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<AdminAddEmployeeService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddCors(options =>
 {
