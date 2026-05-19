@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.DTOs.auth;
+using backend.Enums;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,17 @@ public class AuthService
         UserSession.password = user.password;
         UserSession.role = user.role.ToString();
         UserSession.dateCreated = user.dateCreated;
+        
+        var auditLog = new AuditLog
+        {
+            userID = user.id,
+            action = AuditAction.login,
+            description = $"{user.name} {user.surname} logged into the system."
+        };
+
+        _database.AuditLogs.Add(auditLog);
+
+        await _database.SaveChangesAsync();
 
         var response = new LoginResponse
         {
