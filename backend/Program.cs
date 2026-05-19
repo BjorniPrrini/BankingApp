@@ -32,6 +32,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<AdminAddEmployeeService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AdminHomePage>();
 
 builder.Services.AddCors(options =>
 {
