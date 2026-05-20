@@ -7,6 +7,7 @@ using DotNetEnv;
 using Npgsql;
 using System.Text.Json.Serialization;
 using backend.Services.auth;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<AdminAddEmployeeService>();
 builder.Services.AddScoped<AdminHomePage>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AdminEditEmployeeService>();
 
 builder.Services.AddCors(options =>
 {
@@ -48,6 +50,19 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(dataSource)
 );
+
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .Select(e => new { field = e.Key, errors = e.Value.Errors.Select(x => x.ErrorMessage) });
+
+            return new BadRequestObjectResult(new { message = "Validation failed", errors });
+        };
+    });
 
 var app = builder.Build();
 
