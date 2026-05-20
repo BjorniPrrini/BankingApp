@@ -1,15 +1,27 @@
 $(document).ready(() => {
     const urlID = new URLSearchParams(window.location.search);
     const id = parseInt(urlID.get('id'));
-    const employees = JSON.parse(localStorage.getItem('employeeList') || '[]');
-    const employee = employees.find(e => e.ID === id);
 
-    $('#name').val(employee.name);
-    $('#surname').val(employee.surname);
-    $('#paycheck').val(employee.payCheck);
-    $('#ID').val(employee.ID);
-    $('#generatedEmail').val(employee.email);
-    $('#generatedPassword').val(employee.password);
+    $.ajax({
+        url: `http://localhost:5104/api/admin/editEmployee/get/${id}`,
+        type: "GET",
+        dataType: "json",
+        success: function(response){
+            $('#name').val(response.name);
+            $('#surname').val(response.surname);
+            $('#paycheck').val(response.salary);
+            $('#ID').val(response.employeeID);
+            $('#generatedEmail').val(response.email);
+            $('#generatedPassword').val(response.password);
+        },
+        error: function(error){
+            let message = error.responseJSON?.message || 'An error occurred';
+
+            $('#alert-box').removeClass('success info').addClass('show danger').text(message);
+
+            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+        }
+    });
 
     $('#editButton').on('click', function (e) {
         e.preventDefault();
@@ -26,48 +38,37 @@ $(document).ready(() => {
             return;
         }
 
-        if(name === employee.name && surname === employee.surname && payCheck === employee.payCheck){
-            $('#alert-box').removeClass('success info').addClass('show info').text('Nothing changed');
+        $.ajax({
+            url: "http://localhost:5104/api/admin/editEmployee/edit",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                id: id,
+                name: name,
+                surname: surname,
+                salary: payCheck
+            }),
+            success: function(response){
+                $('#name').val(response.name);
+                $('#surname').val(response.surname);
+                $('#paycheck').val(response.salary);
+                $('#ID').val(response.employeeID);
+                $('#generatedEmail').val(response.email);
+                $('#generatedPassword').val(response.password);
 
-            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
-            return;
-        }
+                $('#alert-box').removeClass('danger info').addClass('show success').text('Employee edited successfully');
 
-        const existsName = name.toLowerCase();
-        const existsSurname = surname.toLowerCase();
+                setTimeout(() => $('#alert-box').removeClass('show'), 5000);
+            },
+            error: function(error){
+                let message = error.responseJSON?.message || 'User could not be added';
 
-        const alreadyExists = employees.some(emp => emp.ID !== id && emp.name.trim().toLowerCase() === existsName && emp.surname.trim().toLowerCase() === existsSurname);
+                $('#alert-box').removeClass('success info').addClass('show danger').text(message);
 
-        if(alreadyExists){
-            $('#alert-box').removeClass('success info').addClass('show danger').text('This employee is already registered');
-            
-            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
-            
-            return;
-        }
-
-        let generatedEmail = name.toLowerCase() + surname.toLowerCase() + id + '@gmail.com';
-        let generatedPassword = name.toLowerCase() + surname.toLowerCase() + id;
-
-        $('#generatedEmail').val(generatedEmail);
-        $('#generatedPassword').val(generatedPassword);
-
-        const index = employees.findIndex(emp => emp.ID === id);
-
-        employees[index] = {
-            name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
-            surname: surname.charAt(0).toUpperCase() + surname.slice(1).toLowerCase(),
-            payCheck: payCheck,
-            ID: id,
-            email: generatedEmail,
-            password: generatedPassword
-        };
-
-        localStorage.setItem('employeeList', JSON.stringify(employees));
-
-        $('#alert-box').removeClass('danger info').addClass('show success').text('Employee edited successfully');
-
-        setTimeout(() => $('#alert-box').removeClass('show'), 5000);
+                setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+            }
+        });
     });
 
     $('#goBack').on('click', function (){
