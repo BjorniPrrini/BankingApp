@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.DTOs.admin;
+using backend.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.admin;
@@ -16,7 +17,7 @@ public class AdminHomePage
     public async Task<List<EmployeeDto>> GetAllEmployees()
     {
         return await _context.Employees
-            .Include(e => e.User)
+            .Where(e => e.User.role == UserRole.banker)
             .Select(e => new EmployeeDto
             {
                 Id = e.id,
