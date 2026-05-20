@@ -38,8 +38,15 @@ public class AppDbContext : DbContext
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .ValueGeneratedOnAdd();
 
-        modelBuilder.Entity<Client>().Property(c => c.accountNumber).HasColumnName("accountnumber");
-        modelBuilder.Entity<Client>().Property(c => c.clientID).HasColumnName("clientid");
+        modelBuilder.Entity<Client>().Property(c => c.accountNumber)
+            .HasColumnName("accountnumber")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<Client>().HasKey(c => c.id);
+
+        modelBuilder.Entity<Client>().Property(c => c.client_id)
+            .HasColumnName("client_id")
+            .ValueGeneratedOnAdd(); 
+        
 
         modelBuilder.Entity<Employee>().Property(e => e.employee_id).HasColumnName("employee_id");
 

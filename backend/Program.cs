@@ -3,6 +3,7 @@ using backend.Data;
 using backend.Enums;
 using backend.Hubs;
 using backend.Services.admin;
+using backend.Services.banker;
 using DotNetEnv;
 using Npgsql;
 using System.Text.Json.Serialization;
@@ -33,6 +34,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<AdminAddEmployeeService>();
 builder.Services.AddScoped<AdminHomePage>();
+builder.Services.AddScoped<BankerAddClientService>(); 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminEditEmployeeService>();
 
