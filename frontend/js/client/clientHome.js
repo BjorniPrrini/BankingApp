@@ -29,7 +29,9 @@ $(document).ready(function (){
     function refreshBalance(){
         const clientList = JSON.parse(localStorage.getItem("clientList") || "[]");
         const fresh = clientList.find(c => c.ID === client.ID);
-        const balance = fresh ? parseFloat(fresh.balance) : parseFloat(client.balance);
+        const balance = fresh
+            ? parseFloat(fresh.balance || 0)
+            : parseFloat(client.balance || 0);
 
         $("#clientBalance").text("ALL " + balance.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}));
 
