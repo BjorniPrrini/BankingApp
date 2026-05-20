@@ -34,14 +34,14 @@ public class AdminAddEmployeeService
         } while (await _database.Employees.AnyAsync(e => e.employee_id == employeeID));
 
         string generatedEmail = request.name.ToLower() + request.surname.ToLower() + employeeID + "@goldstone.com";
-        string generatedPassword = BCrypt.Net.BCrypt.HashPassword(request.name.ToLower() + request.surname.ToLower() + employeeID);
+        string generatedPassword = request.name.ToLower() + request.surname.ToLower() + employeeID;
 
         var user = new User
         {
             name = request.name,
             surname = request.surname,
             email = generatedEmail,
-            password = request.name.ToLower() + request.surname.ToLower() + employeeID,
+            password = BCrypt.Net.BCrypt.HashPassword(generatedPassword),
             role = UserRole.banker
         };
         _database.Users.Add(user);
