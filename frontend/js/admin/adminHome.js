@@ -1,58 +1,83 @@
 $(document).ready(function () {
-    function loadTable() {
-        const employees = JSON.parse(localStorage.getItem('employeeList') || '[]');
-        const tbody = $('tbody');
 
-        tbody.empty();
+    function loadEmployees() {
 
-        if(employees.length === 0){
-            tbody.append('<tr><td colspan="4" style="text-align:center; color: var(--text-dim); padding: 30px;">No employees found.</td></tr>');
+        $.ajax({
+            url: "http://localhost:5104/api/admin/home/employee",
+            type: "GET",
+            dataType: "json",
 
-            return;
-        }
+            success: function (employees) {
 
-        $.each(employees, function(_, emp){
-            const initials = emp.name.charAt(0) + emp.surname.charAt(0);
+                const tbody = $("tbody");
+                tbody.empty();
 
-            const row = `
-                <tr data-id="${emp.ID}">
-                    <td><span class="id-badge">#${emp.ID}</span></td>
-                    <td>
-                        <div class="name-cell">
-                            <div class="avatar">${initials}</div>
-                            ${emp.name} ${emp.surname}
-                        </div>
-                    </td>
-                    <td><span class="paycheck">$${emp.payCheck}</span></td>
-                    <td>
-                        <button class="action-edit" data-id="${emp.ID}">Edit</button>
-                        <button class="action-delete" data-id="${emp.ID}">Delete</button>
-                    </td>
-                </tr>`;
+                if (!employees || employees.length === 0) {
+                    tbody.append(`
+                        <tr>
+                            <td colspan="4" style="text-align:center;">
+                                No employees found
+                            </td>
+                        </tr>
+                    `);
+                    return;
+                }
 
-            tbody.append(row);
+                employees.forEach(emp => {
+
+                    const row = `
+                        <tr data-id="${emp.id}">
+
+                            <td>
+                                <span class="id-badge">#${emp.employeeID}</span>
+                            </td>
+
+                            <td>${emp.name} ${emp.surname}</td>
+
+                            <td>$${emp.payCheck}</td>
+
+                            <td>
+                                <button class="action-edit" data-id="${emp.id}">Edit</button>
+                                <button class="action-delete" data-id="${emp.id}">Delete</button>
+                            </td>
+
+                        </tr>
+                    `;
+
+                    tbody.append(row);
+                });
+            },
+
+            error: function () {
+                $("tbody").html(`
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:red;">
+                            Failed to load employees
+                        </td>
+                    </tr>
+                `);
+            }
         });
     }
 
-    loadTable();
+    loadEmployees();
 
-    $(document).on('click', '.action-delete', function (){
-        const id = $(this).data('id');
-
-        window.location.href = '/frontend/pages/admin/adminDelete.html?id=' + id;
+    $(document).on("click", ".action-edit", function () {
+        const id = $(this).data("id");
+        window.location.href = `/frontend/pages/admin/adminEdit.html?id=${id}`;
     });
 
-    $(document).on('click', '.action-edit', function (){
-        const id = $(this).data('id');
-
-        window.location.href = '/frontend/pages/admin/adminEdit.html?id=' + id;
+    $(document).on("click", ".action-delete", function () {
+        const id = $(this).data("id");
+        window.location.href = `/frontend/pages/admin/adminDelete.html?id=${id}`;
     });
 
-    $('.add-btn').on('click', function (){
-        window.location.href = '/frontend/pages/admin/adminAdd.html';
+    $(document).on("click", ".add-btn", function () {
+        window.location.href = "/frontend/pages/admin/adminAdd.html";
     });
 
-    $('.logout-btn').on('click', function (){
-        window.location.href = '../../login.html';
+    $(document).on("click", ".logout-btn", function () {
+        window.location.href = "../../login.html";
     });
+
 });
