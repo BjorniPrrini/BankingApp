@@ -1,18 +1,14 @@
 $(document).ready(function () {
-
     function loadEmployees() {
-
         $.ajax({
             url: "http://localhost:5104/api/admin/home/employee",
             type: "GET",
             dataType: "json",
-
-            success: function (employees) {
-
+            success: function(employees){
                 const tbody = $("tbody");
                 tbody.empty();
 
-                if (!employees || employees.length === 0) {
+                if(!employees || employees.length === 0){
                     tbody.append(`
                         <tr>
                             <td colspan="4" style="text-align:center;">
@@ -24,7 +20,6 @@ $(document).ready(function () {
                 }
 
                 employees.forEach(emp => {
-
                     const row = `
                         <tr data-id="${emp.id}">
 
@@ -79,5 +74,4 @@ $(document).ready(function () {
     $(document).on("click", ".logout-btn", function () {
         window.location.href = "../../login.html";
     });
-
 });
