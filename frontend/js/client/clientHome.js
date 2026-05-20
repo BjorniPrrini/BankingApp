@@ -1,18 +1,49 @@
 $(document).ready(function (){
-    const client = JSON.parse(localStorage.getItem("loggedInClient") || "null");
+    const client =
+        JSON.parse(localStorage.getItem("loggedInClient") || "null");
 
-    if(!client){
+    if (!client) {
         window.location.href = "../../login.html";
-
         return;
     }
 
-    const initials = client.name.charAt(0) + client.surname.charAt(0);
-    $("#clientAvatar").text(initials);
-    $("#clientName").text(client.name + " " + client.surname);
-    $("#clientId").text(client.ID);
+    $.ajax({
+        url:
+            "http://localhost:5104/api/client/home/" +
+            client.id,
 
-    refreshBalance();
+        type: "GET",
+
+        success: function(data){
+            console.log(data);
+
+            const initials =
+                data.name.charAt(0) +
+                data.surname.charAt(0);
+
+            $("#clientAvatar").text(initials);
+
+            $("#clientName").text(data.name + " " + data.surname);
+
+            $("#clientId").text(data.id);
+
+            $("#clientBalance").text("ALL " + parseFloat(data.balance).toLocaleString(
+                "en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2})
+            );
+
+            const now = new Date();
+
+            $("#balanceDate").text(
+                "as of " +
+                now.toLocaleDateString("en-US",{year: "numeric", month: "short",day: "numeric"})
+            );
+        },
+
+        error: function (){
+            window.location.href =
+                "../../login.html";
+        }
+    });
 
     renderTransactions();
 
@@ -21,37 +52,16 @@ $(document).ready(function (){
     });
 
     $(".logout-btn").on("click", function (){
+
         localStorage.removeItem("loggedInClient");
 
-        window.location.href = "../../login.html";
+        window.location.href =
+            "../../login.html";
     });
-
-    function refreshBalance(){
-        const clientList = JSON.parse(localStorage.getItem("clientList") || "[]");
-        const fresh = clientList.find(c => c.ID === client.ID);
-        const balance = fresh
-            ? parseFloat(fresh.balance || 0)
-            : parseFloat(client.balance || 0);
-
-        $("#clientBalance").text("ALL " + balance.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-
-        const now = new Date();
-
-        $("#balanceDate").text(
-            "as of " +
-            now.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) +
-            " " +
-            now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
-        );
-
-        if(fresh){
-            localStorage.setItem("loggedInClient", JSON.stringify(fresh));
-        }
-    }
 
     function renderTransactions(){
         const allTx = JSON.parse(localStorage.getItem("transactionList") || "[]");
-        const myTx = allTx.filter(tx => tx.senderId === client.ID || tx.recipientId === client.ID);
+        const myTx = allTx.filter(tx => tx.senderId === client.id || tx.recipientId === client.id);
 
         const tbody  = $("#txTableBody");
 
@@ -68,7 +78,7 @@ $(document).ready(function (){
         myTx.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         $.each(myTx, function (_, tx){
-            const isSender   = tx.senderId === client.ID;
+            const isSender   = tx.senderId === client.id;
             const typeLabel  = isSender ? "Send" : "Receive";
             const typeClass  = isSender ? "tx-type tx-send" : "tx-type tx-recv";
             const typeDot    = '<span class="dot"></span>';
