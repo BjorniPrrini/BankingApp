@@ -34,7 +34,7 @@ public class BankerAddClientService
             accountNumber = "ALB" + random.Next(10000000, 99999999);
         } while (await _database.Clients.AnyAsync(c => c.client_id == clientID || c.accountNumber == accountNumber));
         
-        string generatedPassword = request.name.ToLower() + request.surname.ToLower() + clientID;
+        string generatedPassword = request.name.ToLower() + request.surname.ToLower();
 
         var user = new User
         {
