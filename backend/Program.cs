@@ -35,6 +35,8 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<AdminAddEmployeeService>();
 builder.Services.AddScoped<AdminHomePage>();
 builder.Services.AddScoped<BankerAddClientService>(); 
+builder.Services.AddScoped<BankerEditClientService>(); 
+builder.Services.AddScoped<BankerHomePage>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminEditEmployeeService>();
 

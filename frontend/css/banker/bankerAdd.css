@@ -8,7 +8,7 @@
     --text-muted:  #A8B8CC;
     --text-dim:    #5E7A9A;
     --success:     #3DB87A;
-    --danger:      #E05252;
+    --danger: rgba(230, 80, 0, 0.84);
     --warning:     #E0A020;
     --info:        #4A9ECC;
     --border:      rgba(201, 168, 76, 0.25);
