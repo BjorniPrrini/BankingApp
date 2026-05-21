@@ -1,17 +1,30 @@
 $(document).ready(() => {
     const urlID = new URLSearchParams(window.location.search);
     const id = parseInt(urlID.get('id'));
-    const clients = JSON.parse(localStorage.getItem('clientList') || '[]');
-    const client = clients.find(c => c.ID === id);
 
-    $('#name').val(client.name);
-    $('#surname').val(client.surname);
-    $('#balance').val(client.balance);
-    $('#ID').val(client.ID);
-    $('#email').val(client.email);
-    $('#generatedPassword').val(client.password);
 
-    $('#editButton').on('click', function (e){
+    $.ajax({
+        url: `http://localhost:5104/api/banker/editClient/get/${id}`,
+        type: "GET",
+        dataType: "json",
+        success: function(response){
+            $('#name').val(response.name);
+            $('#surname').val(response.surname);
+            $('#balance').val(response.balance);
+            $('#generatedID').val(response.clientID);
+            $('#generatedIBAN').val(response.accountNumber);
+            $('#email').val(response.email);
+            $('#generatedPassword').val(response.password);
+        },
+        error: function(error){
+            let message = error.responseJSON?.message || 'An error occurred';
+
+            $('#alert-box').removeClass('success info').addClass('show danger').text(message);
+
+            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+        }
+    });
+    $('#editButton').on('click', function (e) {
         e.preventDefault();
 
         let name = $('#name').val().trim();
@@ -19,7 +32,8 @@ $(document).ready(() => {
         let balance = $('#balance').val().trim();
         let email = $('#email').val().trim();
 
-        if(!name || !surname || !balance){
+
+        if(!name || !surname || !balance || !email){
             $('#alert-box').removeClass('success info').addClass('show danger').text('Empty fields');
 
             setTimeout(() => $('#alert-box').removeClass('show'), 3000);
@@ -27,49 +41,42 @@ $(document).ready(() => {
             return;
         }
 
-        if(name === client.name && surname === client.surname && balance === client.balance && email === client.email){
-            $('#alert-box').removeClass('success info').addClass('show info').text('Nothing changed');
+        $.ajax({
+            url: "http://localhost:5104/api/banker/editClient/edit",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                id: id,
+                name: name,
+                surname: surname,
+                balance: parseFloat(balance),
+                email: email
+            }),
+            success: function(response){
+                $('#name').val(response.name);
+                $('#surname').val(response.surname);
+                $('#balance').val(response.balance);
+                $('#generatedID').val(response.clientID);
+                $('#generatedIBAN').val(response.clientIBAN);
+                $('#email').val(response.email);
+                $('#generatedPassword').val(response.password);
 
-            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+                $('#alert-box').removeClass('danger info').addClass('show success').text('Client edited successfully');
 
-            return;
-        }
+                setTimeout(() => $('#alert-box').removeClass('show'), 5000);
+            },
 
-        const existsName = name.toLowerCase();
-        const existsSurname = surname.toLowerCase();
+            error: function(error){
+                let message = error.responseJSON?.message || 'Client could not be added';
 
-        const alreadyExists = clients.some(cli => cli.ID !== id && cli.name.trim().toLowerCase() === existsName && cli.surname.trim().toLowerCase() === existsSurname);
+                $('#alert-box').removeClass('success info').addClass('show danger').text(message);
 
-        if(alreadyExists){
-            $('#alert-box').removeClass('success info').addClass('show danger').text('This client is already registered');
-
-            setTimeout(() => $('#alert-box').removeClass('show'), 3000);
-
-            return;
-        }
-
-        let generatedPassword = name.toLowerCase() + surname.toLowerCase() + id;
-
-        $('#email').val(email);
-        $('#generatedPassword').val(generatedPassword);
-
-        const index = clients.findIndex(cli => cli.ID === id);
-
-        clients[index] = {
-            name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
-            surname: surname.charAt(0).toUpperCase() + surname.slice(1).toLowerCase(),
-            balance: balance,
-            ID: id,
-            email: email,
-            password: generatedPassword
-        };
-
-        localStorage.setItem('clientList', JSON.stringify(clients));
-
-        $('#alert-box').removeClass('danger info').addClass('show success').text('Client edited successfully');
-
-        setTimeout(() => $('#alert-box').removeClass('show'), 5000);
+                setTimeout(() => $('#alert-box').removeClass('show'), 3000);
+            }
+        });
     });
+
 
     $('#goBack').on('click', function (){
         window.location.href = '/frontend/pages/banker/bankerHome.html';
