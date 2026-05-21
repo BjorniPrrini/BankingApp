@@ -381,3 +381,23 @@ tbody td {
     font-size: 13px;
     width: 50%;
 }
+
+.changePassword-btn {
+    height: 40px;
+    width: 100%;
+    padding: 0 20px;
+    background: rgb(82 224 224 / 0.12);
+    border: 1px solid rgb(82 219 224 / 0.35);
+    border-radius: var(--radius-sm);
+    color: #a0f0d4;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.changePassword-btn:hover {
+    background: rgb(82 203 224 / 0.22);
+    border-color: var(--info);
+}
