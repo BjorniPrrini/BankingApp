@@ -34,14 +34,14 @@ public class BankerAddClientService
             accountNumber = "ALB" + random.Next(10000000, 99999999);
         } while (await _database.Clients.AnyAsync(c => c.client_id == clientID || c.accountNumber == accountNumber));
         
-        string generatedPassword = BCrypt.Net.BCrypt.HashPassword(request.name.ToLower() + request.surname.ToLower() + clientID);
+        string generatedPassword = request.name.ToLower() + request.surname.ToLower() + clientID;
 
         var user = new User
         {
             name = request.name,
             surname = request.surname,
             email = request.email,
-            password = request.name.ToLower() + request.surname.ToLower() + clientID,
+            password = BCrypt.Net.BCrypt.HashPassword(generatedPassword),
             role = UserRole.client
         };
         _database.Users.Add(user);
