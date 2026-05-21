@@ -129,7 +129,7 @@ function initNotifications() {
     });
 
     $('#showAllBtn').on('click', function(){
-        window.location.href = '../../pages/shared/inbox.html';
+        window.location.href = '../html/inbox.html';
     });
 
     $(document).on('click', '#notifModalClose, #notifModalOverlay', function(e){
