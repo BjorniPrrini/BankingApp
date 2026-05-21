@@ -4,6 +4,7 @@ $(document).ready(function (){
 
     if (!client) {
         window.location.href = "../../login.html";
+
         return;
     }
 
@@ -11,15 +12,9 @@ $(document).ready(function (){
         url:
             "http://localhost:5104/api/client/home/" +
             client.id,
-
         type: "GET",
-
         success: function(data){
-            console.log(data);
-
-            const initials =
-                data.name.charAt(0) +
-                data.surname.charAt(0);
+            const initials = data.name.charAt(0) + data.surname.charAt(0);
 
             $("#clientAvatar").text(initials);
 
@@ -112,4 +107,8 @@ $(document).ready(function (){
 
         return d.toLocaleDateString("en-US", {year:  "numeric", month: "short", day:   "numeric"});
     }
+
+    $(document).on("click", ".changePassword-btn", function () {
+        window.location.href = "/frontend/components/html/change-password.html";
+    });
 });

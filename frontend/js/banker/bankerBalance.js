@@ -3,7 +3,6 @@ $(document).ready(() => {
     const id = parseInt(urlParams.get('id'));
     let currentBalance = 0;
 
-    // Load client data
     $.ajax({
         url: `http://localhost:5104/api/banker/home/client/${id}`,
         type: "GET",

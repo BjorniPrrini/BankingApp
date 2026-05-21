@@ -71,6 +71,10 @@ $(document).ready(function () {
         window.location.href = "/frontend/pages/admin/adminAdd.html";
     });
 
+    $(document).on("click", ".changePassword-btn", function () {
+        window.location.href = "/frontend/components/html/change-password.html";
+    });
+
     $(document).on("click", ".logout-btn", function () {
         window.location.href = "../../login.html";
     });

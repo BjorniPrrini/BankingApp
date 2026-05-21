@@ -52,6 +52,10 @@ $(document).ready(function () {
         window.location.href = '/frontend/pages/banker/bankerAdd.html';
     });
 
+    $(document).on("click", ".changePassword-btn", function () {
+        window.location.href = "/frontend/components/html/change-password.html";
+    });
+
     $('.logout-btn').on('click', function (){
         window.location.href = '../../login.html';
     });
