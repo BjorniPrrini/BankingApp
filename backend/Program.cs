@@ -8,6 +8,7 @@ using DotNetEnv;
 using Npgsql;
 using System.Text.Json.Serialization;
 using backend.Services.auth;
+using backend.Services.client;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,7 @@ builder.Services.AddScoped<AdminHomePage>();
 builder.Services.AddScoped<BankerAddClientService>(); 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminEditEmployeeService>();
+builder.Services.AddScoped<ClientHomeService>();
 
 builder.Services.AddCors(options =>
 {
