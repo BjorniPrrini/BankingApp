@@ -24,7 +24,6 @@ public class BankerAddClientService
             return (false, "This client is already registered", null);
         }
 
-        int clientID;
         string accountNumber;
         Random random = new Random();
         
