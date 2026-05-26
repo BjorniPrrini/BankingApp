@@ -27,12 +27,10 @@ public class BankerAddClientService
         int clientID;
         string accountNumber;
         Random random = new Random();
-
-        do
-        {
-            clientID = random.Next(100000, 999999);
+        
+        do {
             accountNumber = "ALB" + random.Next(10000000, 99999999);
-        } while (await _database.Clients.AnyAsync(c => c.client_id == clientID || c.accountNumber == accountNumber));
+        } while (await _database.Clients.AnyAsync(c => c.accountNumber == accountNumber));
         
         string generatedPassword = request.name.ToLower() + request.surname.ToLower();
 
@@ -45,16 +43,17 @@ public class BankerAddClientService
             role = UserRole.client
         };
         _database.Users.Add(user);
+
         await _database.SaveChangesAsync();
-        
-        var client = new Client {
+
+        var client = new Client
+        {
             id = user.id,
-            client_id = clientID,
-            accountNumber= accountNumber,
+            accountNumber = accountNumber,
             balance = request.balance
         };
+
         _database.Clients.Add(client);
-        await _database.SaveChangesAsync();
         
         var notification = new Notification {
             userID = user.id,
@@ -63,7 +62,6 @@ public class BankerAddClientService
             isRead = false
         };
         _database.Notifications.Add(notification);
-        await _database.SaveChangesAsync();
         
         var autidLog = new AuditLog {
             userID = user.id,
@@ -71,10 +69,11 @@ public class BankerAddClientService
             description = $"Client {request.name} {request.surname} was created by {UserSession.name} {UserSession.surname}.",
         };
         _database.AuditLogs.Add(autidLog);
+        
         await _database.SaveChangesAsync();
         
         return (true, "Client added successfully", new AddClientResponse {
-            clientID = clientID,
+            clientID = client.client_id,
             password = generatedPassword
         });
     }

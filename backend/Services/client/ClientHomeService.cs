@@ -23,8 +23,7 @@ public class ClientHomeService
             return null;
         }
 
-        var client = await _database.Clients
-            .FirstOrDefaultAsync(c => c.client_id == userId);
+        var client = await _database.Clients.FirstOrDefaultAsync(c => c.id == userId);
 
         if (client == null)
         {
@@ -33,7 +32,7 @@ public class ClientHomeService
 
         return new ClientHomeResponse
         {
-            ID = user.id,
+            Id = user.id,
             Name = user.name,
             Surname = user.surname,
             Balance = client.balance

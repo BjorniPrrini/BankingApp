@@ -468,7 +468,6 @@ tbody td {
 
 .changePassword-btn {
     height: 40px;
-    width: 100%;
     padding: 0 20px;
     background: rgb(82 224 224 / 0.12);
     border: 1px solid rgb(82 219 224 / 0.35);
@@ -484,4 +483,15 @@ tbody td {
 .changePassword-btn:hover {
     background: rgb(82 203 224 / 0.22);
     border-color: var(--info);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 20px;
+}
+
+.action-buttons button {
+    width: 180px;
 }

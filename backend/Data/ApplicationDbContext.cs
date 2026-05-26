@@ -37,16 +37,24 @@ public class AppDbContext : DbContext
             .HasColumnName("datecreated")
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<Client>().Property(c => c.accountNumber)
-            .HasColumnName("accountnumber")
-            .ValueGeneratedOnAdd();
-        modelBuilder.Entity<Client>().HasKey(c => c.id);
-
-        modelBuilder.Entity<Client>().Property(c => c.client_id)
-            .HasColumnName("client_id")
-            .ValueGeneratedOnAdd(); 
         
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.ToTable("client");
+
+            entity.HasKey(c => c.id);
+
+            entity.Property(c => c.id)
+                .ValueGeneratedNever();
+
+            entity.Property(c => c.accountNumber)
+                .HasColumnName("accountnumber")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(c => c.client_id)
+                .HasColumnName("client_id")
+                .ValueGeneratedOnAdd();
+        });
 
         modelBuilder.Entity<Employee>().Property(e => e.employee_id).HasColumnName("employee_id");
 
