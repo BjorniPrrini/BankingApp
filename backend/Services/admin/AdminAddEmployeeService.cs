@@ -57,7 +57,7 @@ public class AdminAddEmployeeService
         
         var notification = new Notification {
             userID = user.id,
-            type = NotificationType.login_detected,
+            type = NotificationType.account_created,
             message = $"Welcome {request.name} {request.surname}! Your account has been created.",
             isRead = false
         };
@@ -66,7 +66,7 @@ public class AdminAddEmployeeService
         
         var autidLog = new AuditLog {
             userID = user.id,
-            action = AuditAction.create_user,
+            action = AuditAction.create_banker,
             description = $"Employee {request.name} {request.surname} was created by {UserSession.name} {UserSession.surname}.",
         };
         _database.AuditLogs.Add(autidLog);

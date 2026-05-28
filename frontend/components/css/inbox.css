@@ -545,3 +545,30 @@ tbody td{
     align-items: center;
     gap: 20px;
 }
+
+.inbox-single-read {
+    height: 30px;
+    padding: 0 12px;
+    background: transparent;
+    border: 1px solid rgba(94, 122, 154, 0.3);
+    border-radius: 5px;
+    color: var(--text-dim);
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+}
+
+.inbox-single-read:hover {
+    color: var(--gold);
+    border-color: rgba(201, 168, 76, 0.4);
+}
+
+.read-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--success);
+    padding: 0 4px;
+}

@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.DTOs.admin;
+using backend.Models;
 using backend.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,6 +56,13 @@ public class AdminHomePage
 
         if (employee == null)
             return false;
+
+        var auditLog = new AuditLog {
+            userID = UserSession.id,
+            action = AuditAction.delete_banker,
+            description = $"Employee {employee.User.name} {employee.User.surname} was deleted by {UserSession.name} {UserSession.surname}.",
+        };
+        _context.AuditLogs.Add(auditLog);
 
         _context.Employees.Remove(employee);
         _context.Users.Remove(employee.User);

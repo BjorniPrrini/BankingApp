@@ -61,7 +61,7 @@ public class BankerEditClientService
             var notification = new Notification
             {
                 userID = user.id,
-                type = NotificationType.balance_updated,
+                type = NotificationType.account_updated,
                 message = $"Your personal details were updated by {UserSession.name} {UserSession.surname}.",
                 isRead = false
             };

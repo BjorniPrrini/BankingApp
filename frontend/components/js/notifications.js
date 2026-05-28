@@ -1,155 +1,121 @@
-function getNotifications() {
-    return JSON.parse(localStorage.getItem('notificationList') || '[]');
+const API_BASE_URL = "http://localhost:5104";
+
+window.connection = new signalR.HubConnectionBuilder()
+    .withUrl(`${API_BASE_URL}/notificationHub`)
+    .withAutomaticReconnect()
+    .build();
+
+window.activeNotifications = [];
+
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('loggedInBanker')) || JSON.parse(localStorage.getItem('loggedInClient')) || JSON.parse(localStorage.getItem('loggedInAdmin'));
 }
 
-function saveNotifications(list) {
-    localStorage.setItem('notificationList', JSON.stringify(list));
-}
+async function refreshNotifications() {
+    const user = getCurrentUser();
 
-function updateBellBadge() {
-    const count = getNotifications().filter(n => !n.isRead).length;
-    const badge = $('#bellBadge');
-
-    if(count > 0){
-        badge.text(count > 99 ? '99+' : count).removeClass('hidden');
-    } else {
-        badge.addClass('hidden');
-    }
-}
-
-function timeAgo(dateStr) {
-    const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
-    if(diff < 60)    return 'just now';
-    if(diff < 3600)  return Math.floor(diff / 60) + 'm ago';
-    if(diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-    return Math.floor(diff / 86400) + 'd ago';
-}
-
-function renderDropdown() {
-    const unread = getNotifications()
-        .filter(n => !n.isRead)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
-
-    const list = $('#notifList');
-    list.empty();
-
-    if(unread.length === 0){
-        list.append('<div class="notif-empty">No unread notifications</div>');
+    if(!user){
         return;
     }
 
-    unread.forEach(function(n){
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/notifications/user/${user.id}`);
+
+        window.activeNotifications = await response.json();
+
+        renderBellUI();
+
+        $(document).trigger('notificationsUpdated');
+    } catch (err) {
+        console.error("Fetch error:", err);
+    }
+}
+
+function renderBellUI() {
+    const unreadCount = window.activeNotifications.filter(n => !n.isRead).length;
+    const badge = $('#bellBadge');
+
+    if(unreadCount > 0){
+        badge.text(unreadCount > 99 ? '99+' : unreadCount).removeClass('hidden');
+    }else{
+        badge.addClass('hidden');
+    }
+
+    const list = $('#notifList').empty();
+    window.activeNotifications.slice(0, 5).forEach(n => {
         list.append(`
-            <div class="notif-item unread" data-id="${n.id}">
-                <div class="notif-item-top">
-                    <span class="notif-type-badge ${n.type}">${n.type.replace(/_/g, ' ')}</span>
-                    <span class="notif-time">${timeAgo(n.createdAt)}</span>
-                </div>
+            <div class="notif-item ${n.isRead ? '' : 'unread'}">
+                <span class="notif-type-badge ${n.type}">${n.type.replace(/_/g, ' ')}</span>
                 <span class="notif-message">${n.message}</span>
-                <div class="notif-item-bottom">
-                    <span class="notif-hint">Click to read</span>
-                </div>
             </div>
         `);
     });
 }
 
-function injectModal() {
-    if($('#notifModal').length) return;
+async function startSignalR() {
+    try{
+        await window.connection.start();
 
-    $('body').append(`
-        <div class="notif-modal-overlay" id="notifModalOverlay">
-            <div class="notif-modal" id="notifModal">
-                <div class="notif-modal-header">
-                    <span class="notif-modal-type" id="notifModalType"></span>
-                    <button class="notif-modal-close" id="notifModalClose">✕</button>
-                </div>
-                <div class="notif-modal-body">
-                    <p class="notif-modal-message" id="notifModalMessage"></p>
-                    <span class="notif-modal-time" id="notifModalTime"></span>
-                </div>
-            </div>
-        </div>
-    `);
+        const user = getCurrentUser();
+        if(user){
+            await window.connection.invoke("JoinUserGroup", user.id.toString());
+        }
+    } catch (err) {
+        setTimeout(startSignalR, 5000);
+    }
 }
 
-function openModal(id) {
-    const notif = getNotifications().find(n => n.id === id);
-    if(!notif) return;
+window.connection.on("ReceiveNotification", () => {
+    refreshNotifications();
+});
 
-    $('#notifModalType')
-        .text(notif.type.replace(/_/g, ' '))
-        .attr('class', 'notif-modal-type notif-type-badge ' + notif.type);
-    $('#notifModalMessage').text(notif.message);
-    $('#notifModalTime').text(new Date(notif.createdAt).toLocaleString('en-GB'));
-    $('#notifModalOverlay').addClass('open');
+$(document).ready(() => {
+    startSignalR();
+    refreshNotifications();
 
-    const list = getNotifications();
-    const n = list.find(n => n.id === id);
-    if(n) n.isRead = true;
-    saveNotifications(list);
-    updateBellBadge();
-    renderDropdown();
-}
-
-function closeModal() {
-    $('#notifModalOverlay').removeClass('open');
-}
-
-function initNotifications() {
-    injectModal();
-    updateBellBadge();
-
-    $('#bellBtn').on('click', function(e){
+    $('#bellBtn').on('click', function (e) {
         e.stopPropagation();
-        const isOpen = $('#notifDropdown').hasClass('open');
-        $('#notifDropdown').toggleClass('open', !isOpen);
-        if(!isOpen) renderDropdown();
+
+        const dropdown = $('#notifDropdown');
+
+        dropdown.toggleClass('open');
+
+        if(dropdown.hasClass('open')){
+            renderBellUI();
+        }
     });
 
-    $(document).on('click', function(e){
+    $(document).on('click', function (e) {
         if(!$(e.target).closest('.notif-wrapper').length){
             $('#notifDropdown').removeClass('open');
         }
     });
 
-    $(document).on('click', '.notif-item', function(){
-        const id = parseInt($(this).data('id'));
-        openModal(id);
-        $('#notifDropdown').removeClass('open');
+    $('#showAllBtn').on('click', () => {
+        window.location.href = '/frontend/components/html/inbox.html';
     });
 
-    $('#readAllBtn').on('click', function(e){
-        e.stopPropagation();
-        const list = getNotifications().map(n => ({ ...n, isRead: true }));
-        saveNotifications(list);
-        updateBellBadge();
-        renderDropdown();
+    $('#readAllBtn').on('click', async () => {
+        const user = getCurrentUser();
+
+        if(!user){
+            return;
+        }
+
+        await fetch(`${API_BASE_URL}/api/notifications/mark-all-read/${user.id}`, { method: 'POST' });
+
+        refreshNotifications();
     });
 
-    $('#showAllBtn').on('click', function(){
-        window.location.href = '../html/inbox.html';
+    $('#inboxReadAll').on('click', async () => {
+        const user = getCurrentUser();
+
+        if(!user){
+            return;
+        }
+
+        await fetch(`${API_BASE_URL}/api/notifications/mark-all-read/${user.id}`, { method: 'POST' });
+
+        refreshNotifications();
     });
-
-    $(document).on('click', '#notifModalClose, #notifModalOverlay', function(e){
-        if(e.target === this) closeModal();
-    });
-
-    if(!localStorage.getItem('notificationList')){
-        saveNotifications([
-            { id: 1, type: 'login_detected',      message: 'New login detected from IP 192.168.1.1', isRead: false, createdAt: new Date(Date.now() - 60000).toISOString() },
-            { id: 2, type: 'create_client',        message: 'Client John Doe was created successfully', isRead: false, createdAt: new Date(Date.now() - 3600000).toISOString() },
-            { id: 3, type: 'balance_updated',      message: 'Balance updated to $2,500 for client Jane Smith', isRead: false, createdAt: new Date(Date.now() - 7200000).toISOString() },
-            { id: 4, type: 'transaction_received', message: 'Transaction of $500 received by client #102', isRead: false, createdAt: new Date(Date.now() - 86400000).toISOString() },
-            { id: 5, type: 'transaction_failed',   message: 'Transfer of $1,200 failed — insufficient balance', isRead: false, createdAt: new Date(Date.now() - 172800000).toISOString() },
-            { id: 6, type: 'delete_client',        message: 'Client account #88 was deleted by banker', isRead: true,  createdAt: new Date(Date.now() - 259200000).toISOString() },
-            { id: 6, type: 'balance_updated',        message: 'Client account #90 was added by banker', isRead: false,  createdAt: new Date(Date.now() - 259200000).toISOString() },
-        ]);
-        updateBellBadge();
-    }
-}
-
-$(document).ready(function(){
-    initNotifications();
 });

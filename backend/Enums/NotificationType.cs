@@ -5,5 +5,9 @@ public enum NotificationType
     transaction_received,
     transaction_failed,
     balance_updated,
-    login_detected
+    login_detected,
+    password_changed,
+    account_updated,
+    account_created,
+    account_deleted
 }
