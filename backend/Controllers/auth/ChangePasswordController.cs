@@ -16,7 +16,7 @@ public class ChangePasswordController : ControllerBase
     }
     
     [HttpPost("change")]
-    public async Task<IActionResult> AddEmployee([FromBody] ChangePasswordRequest request)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var (success, message, data) = await _service.ChangePassword(request);
 
