@@ -9,6 +9,7 @@ using Npgsql;
 using System.Text.Json.Serialization;
 using backend.Services.auth;
 using backend.Services.client;
+using backend.Services.notifications;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminEditEmployeeService>();
 builder.Services.AddScoped<ClientHomeService>();
 builder.Services.AddScoped<ChangePasswordService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddCors(options =>
 {

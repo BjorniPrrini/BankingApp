@@ -2,9 +2,10 @@ namespace backend.Enums;
 
 public enum AuditAction
 {
-    create_user,
-    delete_user,
     update_user,
+    create_banker,
+    delete_banker,
+    update_banker,
     create_client,
     delete_client,
     update_client,

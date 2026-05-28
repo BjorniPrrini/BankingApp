@@ -65,7 +65,7 @@ public class AdminEditEmployeeService
 
         var notification = new Notification {
             userID = user.id,
-            type = NotificationType.login_detected,
+            type = NotificationType.account_updated,
             message = $"Your account has been edited by {UserSession.name} {UserSession.surname}!",
             isRead = false
         };
@@ -73,7 +73,7 @@ public class AdminEditEmployeeService
 
         var auditLog = new AuditLog {
             userID = user.id,
-            action = AuditAction.update_user, 
+            action = AuditAction.update_banker, 
             description = $"Employee {request.name} {request.surname} was edited by {UserSession.name} {UserSession.surname}.",
         };
         _database.AuditLogs.Add(auditLog);

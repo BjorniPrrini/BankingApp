@@ -39,7 +39,7 @@ public class ChangePasswordService
 
         var auditLog = new AuditLog {
             userID = user.id,
-            action = AuditAction.update_user,
+            action = AuditAction.update_banker,
             description = $"Password for {user.name} {user.surname} was changed by {UserSession.name} {UserSession.surname}.",
         };
         _database.AuditLogs.Add(auditLog);
