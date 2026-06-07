@@ -41,6 +41,7 @@ builder.Services.AddScoped<BankerEditClientService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminEditEmployeeService>();
 builder.Services.AddScoped<ClientHomeService>();
+builder.Services.AddScoped<ClientTransferService>();
 builder.Services.AddScoped<ChangePasswordService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
