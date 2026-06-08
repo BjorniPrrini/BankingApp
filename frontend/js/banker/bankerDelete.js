@@ -7,13 +7,12 @@ $(document).ready(function () {
         return;
     }
 
-    // Load client details from API
     $.ajax({
         url: `http://localhost:5104/api/banker/home/client/${id}`,
         type: 'GET',
         dataType: 'json',
         success: function (cli) {
-            $('#cliID').val('#' + cli.clientId);
+            $('#cliID').val('#' + cli.id);
             $('#cliName').val(cli.name + ' ' + cli.surname);
             $('#cliBalance').val('$' + cli.balance);
             $('#cliEmail').val(cli.email);
@@ -24,7 +23,6 @@ $(document).ready(function () {
         }
     });
 
-    // Confirm delete
     $('#confirmDelete').on('click', function () {
         $.ajax({
             url: `http://localhost:5104/api/banker/home/client/${id}`,
@@ -38,7 +36,6 @@ $(document).ready(function () {
         });
     });
 
-    // Cancel
     $('#cancelDelete').on('click', function () {
         window.location.href = '/frontend/pages/banker/bankerHome.html';
     });

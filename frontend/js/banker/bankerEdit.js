@@ -14,7 +14,6 @@ $(document).ready(() => {
             $('#generatedID').val(response.clientID);
             $('#generatedIBAN').val(response.accountNumber);
             $('#email').val(response.email);
-            $('#generatedPassword').val(response.password);
         },
         error: function(error){
             let message = error.responseJSON?.message || 'An error occurred';

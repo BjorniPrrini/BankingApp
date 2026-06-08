@@ -20,7 +20,7 @@ $(document).ready(function (){
 
             $("#clientName").text(data.name + " " + data.surname);
 
-            $("#clientId").text(data.id);
+            $("#clientId").text(data.iban);
 
             $("#clientBalance").text("ALL " + parseFloat(data.balance).toLocaleString(
                 "en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2})

@@ -24,7 +24,7 @@ $(document).ready(function () {
                         <tr data-id="${cli.id}">
 
                             <td>
-                                <span class="id-badge">#${cli.clientId}</span>
+                                <span class="id-badge">#${cli.id}</span>
                             </td>
 
                             <td>${cli.name} ${cli.surname}</td>
