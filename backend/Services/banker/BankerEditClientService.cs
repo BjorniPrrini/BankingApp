@@ -2,6 +2,7 @@ using backend.Data;
 using backend.DTOs.banker;
 using backend.Enums;
 using backend.Models;
+using backend.Services.notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.banker;
@@ -9,10 +10,12 @@ namespace backend.Services.banker;
 public class BankerEditClientService
 {
     private readonly AppDbContext _database;
+    private readonly INotificationService _notificationService;
 
-    public BankerEditClientService(AppDbContext database)
+    public BankerEditClientService(AppDbContext database, INotificationService notificationService)
     {
         _database = database;
+        _notificationService = notificationService;
     }
 
     public async Task<EditClientResponse?> GetClientById(int userId)
@@ -58,15 +61,7 @@ public class BankerEditClientService
 
         if (nameChanged)
         {
-            var notification = new Notification
-            {
-                userID = user.id,
-                type = NotificationType.account_updated,
-                message = $"Your personal details were updated by {UserSession.name} {UserSession.surname}.",
-                isRead = false
-            };
-
-            _database.Notifications.Add(notification);
+            await _notificationService.SendAsync(user.id, NotificationType.account_updated, "Your personal details were updated by");
         }
 
         var auditLog = new AuditLog
@@ -109,6 +104,8 @@ public class BankerEditClientService
             action = AuditAction.update_balance,
             description = $"Balance updated to {newBalance} by {UserSession.name} {UserSession.surname}."
         };
+        
+        await _notificationService.SendAsync(userId, NotificationType.balance_updated, "Your balance has been updated.");
 
         _database.AuditLogs.Add(auditLog);
 

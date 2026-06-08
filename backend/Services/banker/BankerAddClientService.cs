@@ -2,6 +2,7 @@ using backend.Data;
 using backend.DTOs.banker;
 using backend.Enums;
 using backend.Models;
+using backend.Services.notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.banker;
@@ -9,10 +10,12 @@ namespace backend.Services.banker;
 public class BankerAddClientService
 {
     private readonly AppDbContext _database;
+    private readonly INotificationService _notificationService;
 
-    public BankerAddClientService(AppDbContext database)
+    public BankerAddClientService(AppDbContext database, INotificationService notificationService)
     {
         _database = database;
+        _notificationService = notificationService;
     }
 
     public async Task<(bool success, string message, AddClientResponse? data)> AddClient(AddClientRequest request)
@@ -54,13 +57,7 @@ public class BankerAddClientService
 
         _database.Clients.Add(client);
         
-        var notification = new Notification {
-            userID = user.id,
-            type = NotificationType.account_created,
-            message = $"Welcome {request.name} {request.surname}! Your account has been created.",
-            isRead = false
-        };
-        _database.Notifications.Add(notification);
+        await _notificationService.SendAsync(user.id, NotificationType.account_created, $"Welcome {request.name} {request.surname}! Your account has been created.");
         
         var autidLog = new AuditLog {
             userID = user.id,

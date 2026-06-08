@@ -2,6 +2,7 @@ using backend.Data;
 using backend.DTOs.client;
 using backend.Enums;
 using backend.Models;
+using backend.Services.notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.client;
@@ -9,10 +10,12 @@ namespace backend.Services.client;
 public class ClientTransferService
 {
     private readonly AppDbContext _database;
+    private readonly INotificationService _notificationService;
 
-    public ClientTransferService(AppDbContext database)
+    public ClientTransferService(AppDbContext database, INotificationService notificationService)
     {
         _database = database;
+        _notificationService = notificationService;
     }
 
     public async Task<(bool success, string message, TransferResponse? data)> Transfer(TransferRequest request)
@@ -53,21 +56,17 @@ public class ClientTransferService
         _database.TransactionHistories.Add(transaction);
         await _database.SaveChangesAsync();
 
-        _database.Notifications.Add(new Notification
-        {
-            userID  = sender.id,
-            type    = NotificationType.transaction_sent,
-            message = $"You sent ALL {request.Amount:F2} to {recipient.User.name} {recipient.User.surname} ({recipient.accountNumber}).",
-            isRead  = false
-        });
+        await _notificationService.SendAsync(
+            sender.id,
+            NotificationType.transaction_sent,
+            $"You sent ALL {request.Amount:F2} to {recipient.User.name} {recipient.User.surname} ({recipient.accountNumber})."
+        );
 
-        _database.Notifications.Add(new Notification
-        {
-            userID  = recipient.id,
-            type    = NotificationType.transaction_received,
-            message = $"You received ALL {request.Amount:F2} from {sender.User.name} {sender.User.surname} ({sender.accountNumber}).",
-            isRead  = false
-        });
+        await _notificationService.SendAsync(
+            recipient.id,
+            NotificationType.transaction_received,
+            $"You received ALL {request.Amount:F2} from {sender.User.name} {sender.User.surname} ({sender.accountNumber})."
+        );
 
         _database.AuditLogs.Add(new AuditLog
         {
@@ -106,14 +105,14 @@ public class ClientTransferService
 
         return transactions.Select(t => new TransactionDto
         {
-            TxId          = t.id,
-            SenderId      = t.senderID,
-            RecipientId   = t.receiverID,
-            SenderIban    = ibanMap.GetValueOrDefault(t.senderID, "—"),
+            TxId = t.id,
+            SenderId = t.senderID,
+            RecipientId = t.receiverID,
+            SenderIban = ibanMap.GetValueOrDefault(t.senderID, "—"),
             RecipientIban = ibanMap.GetValueOrDefault(t.receiverID, "—"),
-            Amount        = t.amount,
-            Status        = t.status.ToString(),
-            Date          = t.transactionTimestamp
+            Amount = t.amount,
+            Status = t.status.ToString(),
+            Date = t.transactionTimestamp
         }).ToList();
     }
 }

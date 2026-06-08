@@ -34,8 +34,6 @@ public class NotificationService : INotificationService
         _database.Notifications.Add(notif);
         await _database.SaveChangesAsync();
 
-        await _hub.Clients
-            .Group($"user_{userId}")
-            .SendAsync("ReceiveNotification", notif);
+        await _hub.Clients.Group($"user_{userId}").SendAsync("ReceiveNotification", notif);
     }
 }

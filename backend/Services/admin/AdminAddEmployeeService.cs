@@ -2,6 +2,7 @@ using backend.Data;
 using backend.DTOs.admin;
 using backend.Enums;
 using backend.Models;
+using backend.Services.notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.admin;
@@ -9,10 +10,12 @@ namespace backend.Services.admin;
 public class AdminAddEmployeeService
 {
     private readonly AppDbContext _database;
+    private readonly INotificationService _notificationService;
 
-    public AdminAddEmployeeService(AppDbContext database)
+    public AdminAddEmployeeService(AppDbContext database, INotificationService notificationService)
     {
         _database = database;
+        _notificationService = notificationService;
     }
 
     public async Task<(bool success, string message, AddEmployeeResponse? data)> AddEmployee(AddEmployeeRequest request)
@@ -55,14 +58,7 @@ public class AdminAddEmployeeService
         _database.Employees.Add(employee);
         await _database.SaveChangesAsync();
         
-        var notification = new Notification {
-            userID = user.id,
-            type = NotificationType.account_created,
-            message = $"Welcome {request.name} {request.surname}! Your account has been created.",
-            isRead = false
-        };
-        _database.Notifications.Add(notification);
-        await _database.SaveChangesAsync();
+        await _notificationService.SendAsync(user.id, NotificationType.account_created, $"Welcome {request.name} {request.surname}! Your account has been created.");
         
         var autidLog = new AuditLog {
             userID = user.id,

@@ -2,6 +2,7 @@ using backend.Data;
 using backend.DTOs.admin;
 using backend.Models;
 using backend.Enums;
+using backend.Services.notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services.admin;
@@ -9,10 +10,12 @@ namespace backend.Services.admin;
 public class AdminEditEmployeeService
 {
     private readonly AppDbContext _database;
-    
-    public AdminEditEmployeeService(AppDbContext database)
+    private readonly INotificationService _notificationService;
+
+    public AdminEditEmployeeService(AppDbContext database, INotificationService notificationService)
     {
         _database = database;
+        _notificationService = notificationService;
     }
     
     public async Task<EditEmployeeResponse?> GetEmployeeById(int id)
@@ -62,14 +65,8 @@ public class AdminEditEmployeeService
         }
 
         employee.salary = request.salary;
-
-        var notification = new Notification {
-            userID = user.id,
-            type = NotificationType.account_updated,
-            message = $"Your account has been edited by {UserSession.name} {UserSession.surname}!",
-            isRead = false
-        };
-        _database.Notifications.Add(notification);
+        
+        await _notificationService.SendAsync(user.id, NotificationType.account_updated, $"Your account has been edited by {UserSession.name} {UserSession.surname}!");
 
         var auditLog = new AuditLog {
             userID = user.id,

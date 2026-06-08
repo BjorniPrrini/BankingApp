@@ -49,4 +49,3 @@ public class BankerEditClientController : ControllerBase
         return Ok(new { message = "Balance updated successfully" });
     }
 }
-    
