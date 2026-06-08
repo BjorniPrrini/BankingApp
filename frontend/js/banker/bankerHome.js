@@ -63,6 +63,10 @@ $(document).ready(function () {
         window.location.href = `/frontend/pages/banker/bankerEdit.html?id=${id}`;
     });
 
+    $(document).on("click", ".changePassword-btn", function () {
+        window.location.href = "/frontend/components/html/change-password.html";
+    });
+
     $(document).on("click", ".action-delete", function () {
         const id = $(this).data("id");
         window.location.href = `/frontend/pages/banker/bankerDelete.html?id=${id}`;
