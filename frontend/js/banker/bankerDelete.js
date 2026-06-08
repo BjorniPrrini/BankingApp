@@ -1,29 +1,45 @@
-$(document).ready(function (){
+$(document).ready(function () {
     const params = new URLSearchParams(window.location.search);
     const id = parseInt(params.get('id'));
-    const clients = JSON.parse(localStorage.getItem('clientList') || '[]');
-    const cli = clients.find(c => c.ID === id);
 
-    if(!cli){
+    if (!id) {
         window.location.href = '/frontend/pages/banker/bankerHome.html';
-
         return;
     }
 
-    $('#cliID').val('#' + cli.ID);
-    $('#cliName').val(cli.name + ' ' + cli.surname);
-    $('#cliBalance').val('$' + cli.balance);
-    $('#cliEmail').val(cli.email);
-
-    $('#confirmDelete').on('click', function (){
-        let updated = clients.filter(c => c.ID !== id);
-
-        localStorage.setItem('clientList', JSON.stringify(updated));
-
-        window.location.href = '/frontend/pages/banker/bankerHome.html';
+    // Load client details from API
+    $.ajax({
+        url: `http://localhost:5104/api/banker/home/client/${id}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (cli) {
+            $('#cliID').val('#' + cli.clientId);
+            $('#cliName').val(cli.name + ' ' + cli.surname);
+            $('#cliBalance').val('$' + cli.balance);
+            $('#cliEmail').val(cli.email);
+        },
+        error: function () {
+            alert('Client not found.');
+            window.location.href = '/frontend/pages/banker/bankerHome.html';
+        }
     });
 
-    $('#cancelDelete').on('click', function (){
+    // Confirm delete
+    $('#confirmDelete').on('click', function () {
+        $.ajax({
+            url: `http://localhost:5104/api/banker/home/client/${id}`,
+            type: 'DELETE',
+            success: function () {
+                window.location.href = '/frontend/pages/banker/bankerHome.html';
+            },
+            error: function () {
+                alert('Failed to delete client. Please try again.');
+            }
+        });
+    });
+
+    // Cancel
+    $('#cancelDelete').on('click', function () {
         window.location.href = '/frontend/pages/banker/bankerHome.html';
     });
 });

@@ -8,7 +8,7 @@
     --text-muted:  #A8B8CC;
     --text-dim:    #5E7A9A;
     --success:     #3DB87A;
-    --danger: #e08852;
+    --danger:      #E05252;
     --warning:     #E0A020;
     --info:        #4A9ECC;
     --border:      rgba(201, 168, 76, 0.25);
@@ -236,11 +236,31 @@ tbody td {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s;
+    margin-right: 8px;
 }
 
 .action-delete:hover {
     background: rgba(224, 82, 82, 0.22);
     border-color: var(--danger);
+}
+
+.action-balance {
+    height: 32px;
+    padding: 0 14px;
+    background: rgba(61, 184, 122, 0.35);
+    border: 1px solid rgba(61, 184, 122, 0.35);
+    border-radius: var(--radius-sm);
+    color: var(--success);
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.action-balance:hover {
+    background: rgba(61, 184, 122, 0.5);
+    border-color: var(--success);
 }
 
 .footer {
@@ -379,25 +399,4 @@ tbody td {
     height: 40px;
     padding: 0 20px;
     font-size: 13px;
-    width: 50%;
-}
-
-.changePassword-btn {
-    height: 40px;
-    width: 100%;
-    padding: 0 20px;
-    background: rgb(82 224 224 / 0.12);
-    border: 1px solid rgb(82 219 224 / 0.35);
-    border-radius: var(--radius-sm);
-    color: #a0f0d4;
-    font-family: var(--font-main);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-}
-
-.changePassword-btn:hover {
-    background: rgb(82 203 224 / 0.22);
-    border-color: var(--info);
-}
+    width: 50%;}
